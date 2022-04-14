@@ -3,6 +3,7 @@ using App.Domain.Interfaces;
 using App.Models;
 using Dapper;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace App.Infra.Data.Repository
@@ -59,6 +60,29 @@ namespace App.Infra.Data.Repository
             }
         }
 
+        public async Task<IEnumerable<SoccerTeam>> FilterAsync(string filter)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT [Id]
+                                  ,[Name]
+                                  ,[Country]
+                                  ,[Image]
+                                  ,[Created]
+                                  ,[Updated]
+                              FROM [dbo].[SoccerTeams]
+                              WHERE [Name] LIKE '%{filter}%'";
+                try
+                {
+                    return await connection.QueryAsync<SoccerTeam>(query);
+                }
+                catch (Exception ex)
+                {
+                    throw new QuerySoccerTeamException(ex.Message, ex);
+                }
+            }
+        }
+
         public async Task<SoccerTeam> GetAsync(int id)
         {
             using (var connection = _connectionFactory.CreateConnection())
@@ -73,7 +97,29 @@ namespace App.Infra.Data.Repository
                               WHERE [Id] = @Id";
                 try
                 {
-                    return await connection.QueryFirstAsync<SoccerTeam>(query);
+                    return await connection.QueryFirstAsync<SoccerTeam>(query, new { Id = id });
+                }
+                catch (Exception ex)
+                {
+                    throw new QuerySoccerTeamException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<SoccerTeam>> GetAsync()
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT [Id]
+                                  ,[Name]
+                                  ,[Country]
+                                  ,[Image]
+                                  ,[Created]
+                                  ,[Updated]
+                              FROM [dbo].[SoccerTeams]";
+                try
+                {
+                    return await connection.QueryAsync<SoccerTeam>(query);
                 }
                 catch (Exception ex)
                 {

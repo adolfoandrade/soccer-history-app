@@ -1,5 +1,6 @@
 ﻿using App.Models;
 using App.Service.ViewModels;
+using App.Service.ViewModels.SoccerTeam;
 using System;
 using System.Collections.Generic;
 
@@ -126,6 +127,47 @@ namespace App.Service
             vm.Updated = entity.Updated;
 
             return vm;
+        }
+
+        public static List<SoccerTeamVM> ToVM(this IEnumerable<SoccerTeam> entities)
+        {
+            var vm = new List<SoccerTeamVM>();
+            foreach (var entity in entities)
+            {
+                vm.Add(entity.ToVM());
+            }
+            return vm;
+        }
+
+        public static SoccerTeam ToEntity(this AddSoccerTeamVM vm)
+        {
+            var entity = new SoccerTeam();
+            if (vm is null)
+                return entity;
+
+            entity.Country = vm.Country;
+            entity.Image = vm.Image;
+            entity.Name = vm.Name;
+            entity.Created = vm.Created;
+            entity.Updated = vm.Updated;
+
+            return entity;
+        }
+
+        public static SoccerTeam ToEntity(this UpdateSoccerTeamVM vm)
+        {
+            var entity = new SoccerTeam();
+            if (vm is null)
+                return entity;
+
+            entity.Id = vm.Id;
+            entity.Country = vm.Country;
+            entity.Image = vm.Image;
+            entity.Name = vm.Name;
+            entity.Created = vm.Created;
+            entity.Updated = vm.Updated;
+
+            return entity;
         }
 
         public static MatchVM ToVM(this Match vm)

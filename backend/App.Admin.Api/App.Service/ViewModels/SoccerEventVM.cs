@@ -1,4 +1,6 @@
-﻿namespace App.Service.ViewModels
+﻿using App.Service.ViewModels.SoccerTeam;
+
+namespace App.Service.ViewModels
 {
     public class SoccerEventVM
     {

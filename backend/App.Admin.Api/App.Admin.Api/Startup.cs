@@ -31,6 +31,7 @@ namespace App.Admin.Api
 
             services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddScoped<ISoccerTeamRepository, SoccerTeamRepository>();
+            services.AddScoped<ISoccerTeamService, SoccerTeamService>();
 
             services.AddScoped<ICompetitionRepository, CompetitionRepository>();
             services.AddScoped<ICompetitionService, CompetitionService>();
