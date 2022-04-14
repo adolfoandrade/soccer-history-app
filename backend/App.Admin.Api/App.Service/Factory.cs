@@ -58,6 +58,7 @@ namespace App.Service
                 return entity;
 
             entity.MatchId = vm.MatchId;
+            entity.Date = vm.Date;
             entity.HomeTeamId = vm.HomeTeamId;
             entity.OutTeamId = vm.OutTeamId;
             entity.Referee = vm.Referee;
@@ -75,6 +76,7 @@ namespace App.Service
 
             entity.Id = vm.Id;
             entity.MatchId = vm.MatchId;
+            entity.Date = vm.Date;
             entity.HomeTeamId = vm.HomeTeamId;
             entity.OutTeamId = vm.OutTeamId;
             entity.Referee = vm.Referee;
@@ -102,6 +104,7 @@ namespace App.Service
 
             vm.Id = entity.Id;
             vm.MatchId = entity.MatchId;
+            vm.Date = entity.Date;
             vm.HomeTeamId = entity.HomeTeamId;
             vm.OutTeamId = entity.OutTeamId;
             vm.Referee = entity.Referee;
