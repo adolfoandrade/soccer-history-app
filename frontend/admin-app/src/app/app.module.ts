@@ -4,16 +4,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SoccerTeamComponent } from './soccer-team/soccer-team.component';
+import { SoccerTeamModule } from './soccer-team/soccer-team.module';
+import { SoccerEventModule } from './soccer-event/soccer-event.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SoccerTeamComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    SoccerTeamModule,
+    SoccerEventModule,
     BrowserAnimationsModule
   ],
   providers: [],
