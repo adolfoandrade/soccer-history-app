@@ -1,1 +1,12 @@
-<p>soccer-team works!</p>
+<ul>
+  <li *ngFor="let item of teams" class="list-card-item">
+    <mat-card class="soccer-team-card">
+        <img alt="" width="40" height="40" src="https://soccer.blob.core.windows.net/teams/bucaramanga.png" >
+        <p>{{ item.name }}</p>
+        <button mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+          <mat-icon>home</mat-icon>
+        </button>
+    </mat-card>
+  </li>
+</ul>
+

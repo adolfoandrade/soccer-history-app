@@ -1,0 +1,13 @@
+table {
+  width: 100%;
+}
+
+.list-card-item {
+  margin: 1em;
+}
+
+.soccer-team-card {
+  display: flex;
+  flex-direction: row;
+  padding: 10p;
+}

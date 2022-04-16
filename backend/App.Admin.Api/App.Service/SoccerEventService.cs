@@ -128,9 +128,10 @@ namespace App.Service
                     @events.Add(new SoccerEventMatchVM()
                     {
                         Match = match.ToVM(),
-                        Events = seasonEvents.Where(x => x.MatchId == match.Id).ToList().ToVM()
+                        Events = seasonEvents.Where(x => x.MatchId == match.Id).ToVM()
                     });
                 }
+                vm.Matches = @events;
                 return vm;
             }
             catch (QueryBySeasonSoccerEventException ex)
