@@ -39,6 +39,17 @@ namespace App.Admin.Api
             services.AddScoped<ISoccerEventRepository, SoccerEventRepository>();
             services.AddScoped<ISoccerEventService, SoccerEventService>();
 
+            services.AddScoped<ISoccerTeamEventCardRepository, SoccerTeamEventCardRepository>();
+            services.AddScoped<IStatisticGoalsService, StatisticGoalsService>();
+
+            services.AddScoped<ISoccerTeamEventGolRepository, SoccerTeamEventGolRepository>();
+            services.AddScoped<IStatisticCardsService, StatisticCardsService>();
+
+            services.AddScoped<IStatisticRepository, StatisticRepository>();
+            services.AddScoped<ICommonStatisticService, CommonStatisticService>();
+
+            services.AddScoped<IEventTimeStatisticRepository, EventTimeStatisticRepository>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

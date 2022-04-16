@@ -1,10 +1,9 @@
-﻿namespace App.Domain.Models
+﻿namespace App.Service.ViewModels.Statistic
 {
-    public class Statistic
+    public class AddCommonStatisticVM
     {
-        public int Id { get; set; }
+        public EventTimeStatisticVM EventTimeStatistic { get; set; }
         public int EventTimeStatisticId { get; set; }
-        public EventTimeStatistic EventTimeStatistic { get; set; }
         public int BallPossession { get; set; }
         public int GoalAttempts { get; set; }
         public int ShotsOnGoal { get; set; }

@@ -1,14 +1,11 @@
-﻿using App.Models;
-
-namespace App.Domain.Models
+﻿namespace App.Service.ViewModels.Statistic
 {
-    public class SoccerTeamEventGol
+    public class AddStatisticGoalsVM
     {
-        public int Id { get; set; }
+        public EventTimeStatisticVM EventTimeStatistic { get; set; }
         public int Minute { get; set; }
         public string Player { get; set; }
         public string Assist { get; set; }
         public int EventTimeStatisticId { get; set; }
-        public EventTimeStatistic EventTimeStatistic { get; set; }
     }
 }

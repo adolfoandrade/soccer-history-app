@@ -1,6 +1,10 @@
-﻿using App.Models;
+﻿using App.Domain.Models;
+using App.Domain.Models.Enum;
+using App.Models;
 using App.Service.ViewModels;
+using App.Service.ViewModels.SoccerEvent;
 using App.Service.ViewModels.SoccerTeam;
+using App.Service.ViewModels.Statistic;
 using System;
 using System.Collections.Generic;
 
@@ -109,9 +113,22 @@ namespace App.Service
             vm.OutTeamId = entity.OutTeamId;
             vm.Referee = entity.Referee;
             vm.Venue = entity.Venue;
-            vm.Match = entity.Match.ToVM();
-            vm.Home = entity.Home.ToVM();
-            vm.Out = entity.Out.ToVM();
+            vm.Home = entity.Home.ToSoccerTeamEventVM();
+            vm.Out = entity.Out.ToSoccerTeamEventVM();
+
+            return vm;
+        }
+
+        public static SoccerTeamEventVM ToSoccerTeamEventVM(this SoccerTeam entity)
+        {
+            var vm = new SoccerTeamEventVM();
+            if (entity is null)
+                return vm;
+
+            vm.Id = entity.Id;
+            vm.Country = entity.Country;
+            vm.Image = entity.Image;
+            vm.Name = entity.Name;
 
             return vm;
         }
@@ -199,6 +216,80 @@ namespace App.Service
             entity.Letter = vm.Letter;
             entity.Stage = vm.Stage;
             entity.CompetitionId = vm.CompetitionId;
+
+            return entity;
+        }
+
+        public static SoccerTeamEventGol ToEntity(this AddStatisticGoalsVM vm)
+        {
+            var entity = new SoccerTeamEventGol();
+            if (vm is null)
+                return entity;
+
+            entity.EventTimeStatistic = vm.EventTimeStatistic.ToEntity();
+            entity.Minute = vm.Minute;
+            entity.Player = vm.Player;
+            entity.Assist = vm.Assist;
+            entity.EventTimeStatisticId = vm.EventTimeStatisticId;
+
+            return entity;
+        }
+
+        public static SoccerTeamEventCard ToEntity(this AddStatisticCardsVM vm)
+        {
+            var entity = new SoccerTeamEventCard();
+            if (vm is null)
+                return entity;
+
+            entity.EventTimeStatistic = vm.EventTimeStatistic.ToEntity();
+            entity.Minute = vm.Minute;
+            entity.Player = vm.Player;
+            entity.Color = vm.Color;
+            entity.EventTimeStatisticId = vm.EventTimeStatisticId;
+
+            return entity;
+        }
+
+        public static Statistic ToEntity(this AddCommonStatisticVM vm)
+        {
+            var entity = new Statistic();
+            if (vm is null)
+                return entity;
+
+            entity.EventTimeStatistic = vm.EventTimeStatistic.ToEntity();
+            entity.EventTimeStatisticId = vm.EventTimeStatisticId;
+            entity.BallPossession = vm.BallPossession;
+            entity.GoalAttempts = vm.GoalAttempts;
+            entity.ShotsOnGoal = vm.ShotsOnGoal;
+            entity.ShotsOffGoal = vm.ShotsOffGoal;
+            entity.BlockedShots = vm.BlockedShots;
+            entity.CornerKicks = vm.CornerKicks;    
+            entity.FreeKicks = vm.FreeKicks;
+            entity.Offsides = vm.Offsides;
+            entity.Throwin = vm.Throwin;
+            entity.GoalkeeperSaves = vm.GoalkeeperSaves;
+            entity.Fouls = vm.Fouls;
+            entity.YellowCards = vm.YellowCards;
+            entity.RedCards = vm.RedCards;
+            entity.TotalPasses = vm.TotalPasses;
+            entity.CompletedPasses = vm.CompletedPasses;
+            entity.Trackles = vm.Trackles;
+            entity.Attacks = vm.Attacks;
+            entity.DangerousAttacks = vm.DangerousAttacks;
+
+            return entity;
+        }
+
+        public static EventTimeStatistic ToEntity(this EventTimeStatisticVM vm)
+        {
+            var entity = new EventTimeStatistic();
+            if (vm is null)
+                return entity;
+
+            entity.Id = vm.Id;
+            entity.Half = (SoccerTimers)vm.Half;
+            entity.EventId = vm.EventId;
+            entity.SoccerTeamId = vm.SoccerTeamId;
 
             return entity;
         }

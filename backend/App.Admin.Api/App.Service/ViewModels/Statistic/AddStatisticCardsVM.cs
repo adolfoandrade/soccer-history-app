@@ -1,12 +1,11 @@
-﻿namespace App.Domain.Models
+﻿namespace App.Service.ViewModels.Statistic
 {
-    public class SoccerTeamEventCard
+    public class AddStatisticCardsVM
     {
-        public int Id { get; set; }
+        public EventTimeStatisticVM EventTimeStatistic { get; set; }
         public int Minute { get; set; }
         public string Player { get; set; }
         public string Color { get; set; }
         public int EventTimeStatisticId { get; set; }
-        public EventTimeStatistic EventTimeStatistic { get; set; }
     }
 }
