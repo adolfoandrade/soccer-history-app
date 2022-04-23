@@ -4,6 +4,8 @@ using App.Service.ViewModels.SoccerTeam;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +63,26 @@ namespace App.Admin.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
             }
+        }
+
+        [HttpPost(nameof(UploadFile))]
+        public async Task<IActionResult> UploadFile(IFormFile files)
+        {
+            string systemFileName = files.FileName;
+            string blobstorageconnection = "DefaultEndpointsProtocol=https;AccountName=soccer;AccountKey=bTLerzicIaITKhTlxVx0QVYpfB/ymB76o2915zEu0hgFWbNdju6HdQUQi9KfhObtY+b+ImzRFzpFVhbilm8zbQ==;EndpointSuffix=core.windows.net";
+            // Retrieve storage account from connection string.    
+            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
+            // Create the blob client.    
+            CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
+            // Retrieve a reference to a container.    
+            CloudBlobContainer container = blobClient.GetContainerReference("teams");
+            // This also does not make a service call; it only creates a local object.    
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(systemFileName);
+            await using (var data = files.OpenReadStream())
+            {
+                await blockBlob.UploadFromStreamAsync(data);
+            }
+            return Ok("File Uploaded Successfully");
         }
 
         [HttpGet("{id}")]
