@@ -50,6 +50,23 @@ namespace App.Admin.Api
 
             services.AddScoped<IEventTimeStatisticRepository, EventTimeStatisticRepository>();
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000",
+                                            "http://localhost:3001",
+                                            "http://localhost:3002",
+                                            "http://localhost:4222",
+                                            "https://localhost:5001",
+                                            "http://www.contoso.com")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -71,6 +88,8 @@ namespace App.Admin.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
