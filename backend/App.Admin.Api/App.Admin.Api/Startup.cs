@@ -27,7 +27,7 @@ namespace App.Admin.Api
         {
             services.AddOptions();
             services.Configure<AppSettings>(Configuration.GetSection("SqlConnectionSettings"));
-            services.AddSingleton<IDbConnectionFactory, SqlConnectionFactory>();;
+            services.AddSingleton<IDbConnectionFactory, SqlConnectionFactory>();
 
             services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddScoped<ISoccerTeamRepository, SoccerTeamRepository>();
