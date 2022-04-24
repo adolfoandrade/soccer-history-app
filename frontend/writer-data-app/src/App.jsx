@@ -1,16 +1,18 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import TeamPage from "./views/Teams/TeamPage/TeamPage";
 import EventPage from "./views/Events/EventPage/EventPage";
 import TeamForm from "./views/Teams/TeamForm/TeamForm";
+import EventForm from "./views/Events/EventForm/EventForm";
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path="/" element={<EventPage></EventPage>}></Route>
+        <Route path="/add" element={<EventForm></EventForm>}></Route>
         <Route path="/soccer/team" element={<TeamPage></TeamPage>}></Route>
-        <Route path="/soccer/team/form" element={<TeamForm></TeamForm>}></Route>
+        <Route path="/soccer/team/form/:id" element={<TeamForm></TeamForm>}></Route>
       </Routes>
     </div>
   );

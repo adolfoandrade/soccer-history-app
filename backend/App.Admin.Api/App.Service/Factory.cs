@@ -61,13 +61,14 @@ namespace App.Service
             if (vm is null)
                 return entity;
 
-            entity.MatchId = vm.MatchId;
+            //entity.MatchId = vm.MatchId;
+            entity.Match = new Match() { CompetitionId = vm.CompetitionId, Number = vm.MatchNumber };
             entity.Date = vm.Date;
             entity.HomeTeamId = vm.HomeTeamId;
             entity.OutTeamId = vm.OutTeamId;
             entity.Referee = vm.Referee;
             entity.Venue = vm.Venue;
-            entity.Match = vm.Match.ToEntity();
+            //entity.Match = vm.Match.ToEntity();
 
             return entity;
         }

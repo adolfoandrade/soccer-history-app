@@ -27,6 +27,50 @@ namespace App.Admin.Api.Controllers
             _service = service;
         }
 
+        [HttpPost]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Post(AddSoccerTeamVM vm)
+        {
+            try
+            {
+                var result = await _service.AddAsync(vm);
+                if (result < 1)
+                    return BadRequest();
+
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            catch (AddSoccerTeamException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Put(UpdateSoccerTeamVM vm)
+        {
+            try
+            {
+                var result = await _service.UpdateAsync(vm);
+                if (!result)
+                    return BadRequest();
+
+                return Ok();
+            }
+            catch (UpdateSoccerTeamException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+        }
+
         [HttpGet("filter/{filter}")]
         [ProducesResponseType(typeof(IEnumerable<SoccerTeamVM>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(int), StatusCodes.Status404NotFound)]
@@ -69,6 +113,7 @@ namespace App.Admin.Api.Controllers
         public async Task<IActionResult> UploadFile(IFormFile files)
         {
             string systemFileName = files.FileName;
+            string baseUrl = $"https://soccer.blob.core.windows.net/teams/{systemFileName}";
             string blobstorageconnection = "DefaultEndpointsProtocol=https;AccountName=soccer;AccountKey=bTLerzicIaITKhTlxVx0QVYpfB/ymB76o2915zEu0hgFWbNdju6HdQUQi9KfhObtY+b+ImzRFzpFVhbilm8zbQ==;EndpointSuffix=core.windows.net";
             // Retrieve storage account from connection string.    
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
@@ -82,7 +127,7 @@ namespace App.Admin.Api.Controllers
             {
                 await blockBlob.UploadFromStreamAsync(data);
             }
-            return Ok("File Uploaded Successfully");
+            return Ok(new { Image = baseUrl });
         }
 
         [HttpGet("{id}")]

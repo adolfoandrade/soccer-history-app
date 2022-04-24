@@ -1,7 +1,5 @@
-import "./App.css";
-
-import React, { Fragment, useEffect, useState } from "react";
-import { Formik, Form, setFieldValue } from "formik";
+import React, { useEffect, useState } from "react";
+import { Formik, Form } from "formik";
 import { TextField, Stack, Autocomplete, Box, Container } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
@@ -38,8 +36,20 @@ function EventForm() {
           venue: ""
         }}
         onSubmit={async (values) => {
-          await new Promise((r) => setTimeout(r, 500));
-          alert(JSON.stringify(values, null, 2));
+          console.log(values);
+          fetch('https://localhost:5001/api/Events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+          }).then(res => {
+            console.log(res);
+            if (res.created) {
+              console.log(res);
+              alert("File uploaded successfully.")
+            }
+          });
         }}
       >
         {({
@@ -71,7 +81,7 @@ function EventForm() {
                 id="match-number"
                 label="Match Number"
                 variant="outlined"
-                onChange={(e, value) => setFieldValue("match.number", e.target.value)}
+                onChange={(e, value) => setFieldValue("matchNumber", e.target.value)}
               />
 
               <Autocomplete
@@ -81,6 +91,18 @@ function EventForm() {
                 options={soccerTeams}
                 onChange={(e, value) => setFieldValue("homeTeamId", value.id)}
                 sx={{ width: "100%" }}
+                renderOption={(props, option) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <img
+                      loading="lazy"
+                      width="20"
+                      src={`${option.image}`}
+                      srcSet={`${option.image} 2x`}
+                      alt=""
+                    />
+                    {option.name}
+                  </Box>
+                )}
                 renderInput={(params) => (
                   <TextField {...params} label="Home Team" />
                 )}
@@ -93,6 +115,18 @@ function EventForm() {
                 options={soccerTeams}
                 sx={{ width: "100%" }}
                 onChange={(e, value) => setFieldValue("outTeamId", value.id)}
+                renderOption={(props, option) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <img
+                      loading="lazy"
+                      width="20"
+                      src={`${option.image}`}
+                      srcSet={`${option.image} 2x`}
+                      alt=""
+                    />
+                    {option.name}
+                  </Box>
+                )}
                 renderInput={(params) => (
                   <TextField {...params} label="Out Team" />
                 )}

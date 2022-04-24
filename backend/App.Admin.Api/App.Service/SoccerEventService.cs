@@ -30,12 +30,14 @@ namespace App.Service
             var entity = vm.ToEntity();
             try
             {
-                var match = await _matchRepository.GetByMatchNumerAsync(vm.Match.Number);
+                var match = await _matchRepository.GetByMatchNumerAsync(vm.MatchNumber, vm.CompetitionId);
                 if(match is null)
                 {
+                    match = new Match { CompetitionId = vm.CompetitionId, Number = vm.MatchNumber };
                     await _matchRepository.AddAsync(match);
-                    match = await _matchRepository.GetByMatchNumerAsync(vm.Match.Number);
+                    match = await _matchRepository.GetByMatchNumerAsync(vm.MatchNumber, vm.CompetitionId);
                     entity.MatchId = match.Id;
+                    entity.Match = match;
                 }
                 return await _repository.AddAsync(entity);
             }
@@ -88,11 +90,11 @@ namespace App.Service
             }
         }
 
-        public async Task<SoccerEventMatchVM> GetByMatchAsync(string match)
+        public async Task<SoccerEventMatchVM> GetByMatchAsync(string match, int competitionId)
         {
             try
             {
-                var theMatch = await _matchRepository.GetByMatchNumerAsync(int.Parse(match));
+                var theMatch = await _matchRepository.GetByMatchNumerAsync(int.Parse(match), competitionId);
                 var events = await _repository.GetByMatchAsync(match);
                 var vm = new SoccerEventMatchVM();
                 vm.Match = theMatch.ToVM();

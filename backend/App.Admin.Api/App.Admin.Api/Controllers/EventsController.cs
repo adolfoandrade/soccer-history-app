@@ -22,17 +22,17 @@ namespace App.Admin.Api.Controllers
             _service = service;
         }
 
-        [HttpGet("matches/{match}")]
+        [HttpGet("matches/{match}/{competitionId}")]
         [ProducesResponseType(typeof(SoccerEventMatchVM), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(int), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(int), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(int), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(int), StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetByMatch(string match)
+        public async Task<IActionResult> GetByMatch(string match, int competitionId)
         {
             try
             {
-                var result = await _service.GetByMatchAsync(match);
+                var result = await _service.GetByMatchAsync(match, competitionId);
                 return Ok(result);
             }
             catch (QueryByMatchSoccerEventException ex)

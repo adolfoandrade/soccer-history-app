@@ -41,7 +41,7 @@ namespace App.Infra.Data.Repository
             }
         }
 
-        public async Task<Match> GetByMatchNumerAsync(int id)
+        public async Task<Match> GetByMatchNumerAsync(int id, int competitionId)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -51,10 +51,10 @@ namespace App.Infra.Data.Repository
                                   ,[Stage]
                                   ,[CompetitionId]
                               FROM [dbo].[Matches]
-                              WHERE [Number] = @Id";
+                              WHERE [Number] = @Id AND [CompetitionId] = @CompetitionId";
                 try
                 {
-                    return await connection.QueryFirstAsync<Match>(query, new { Id = id });
+                    return await connection.QueryFirstOrDefaultAsync<Match>(query, new { Id = id, CompetitionId = competitionId });
                 }
                 catch (Exception ex)
                 {

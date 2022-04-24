@@ -24,6 +24,8 @@ namespace App.Service
             try
             {
                 var entity = vm.ToEntity();
+                entity.Created = DateTime.Now;
+                entity.Updated = DateTime.Now;
                 return await _repository.AddAsync(entity);
             }
             catch (AddSoccerTeamException ex)
@@ -97,7 +99,8 @@ namespace App.Service
             try
             {
                 var entity = vm.ToEntity();
-                var quantityAffected = await _repository.AddAsync(entity);
+                entity.Updated = DateTime.Now;
+                var quantityAffected = await _repository.UpdateAsync(entity);
                 return quantityAffected > 0;
             }
             catch (UpdateSoccerTeamException ex)

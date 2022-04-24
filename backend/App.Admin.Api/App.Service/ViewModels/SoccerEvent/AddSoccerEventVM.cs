@@ -4,8 +4,8 @@ namespace App.Service.ViewModels
 {
     public class AddSoccerEventVM
     {
-        public int MatchId { get; set; }
-        public MatchVM Match { get; set; }
+        public int CompetitionId { get; set; }
+        public int MatchNumber { get; set; }
         public DateTime Date { get; set; }
         public int HomeTeamId { get; set; }
         public int OutTeamId { get; set; }

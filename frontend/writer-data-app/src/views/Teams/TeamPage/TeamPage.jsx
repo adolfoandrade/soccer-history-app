@@ -1,45 +1,82 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Container } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Fab from '@mui/material/Fab';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
 import Avatar from '@mui/material/Avatar';
+import MenuIcon from '@mui/icons-material/Menu';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import MoreIcon from '@mui/icons-material/MoreVert';
+
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+
+const StyledFab = styled(Fab)({
+  position: 'absolute',
+  zIndex: 1,
+  top: -30,
+  left: 0,
+  right: 0,
+  margin: '0 auto',
+});
 
 function TeamPage() {
 
-    const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState([]);
 
-    useEffect(() => {
-        fetch("https://localhost:5001/api/SoccerTeams")
-          .then((response) => response.json())
-          .then((data) => setTeams(data));
-      }, []);
+  useEffect(() => {
+    fetch("https://localhost:5001/api/SoccerTeams")
+      .then((response) => response.json())
+      .then((data) => setTeams(data));
+  }, []);
 
-    return (
-        <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-          {teams.map((value) => {
-            const labelId = `checkbox-list-secondary-label-${value}`;
-            return (
-              <ListItem
-                key={value}
-                disablePadding
-              >
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt={`${value.name}`}
-                      src={`/static/images/avatar/${value.name}.jpg`}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText id={labelId} primary={`${value.name}`} />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
-        </List>
-      );
+  return (
+    <>
+      <Container maxWidth="sm">
+        <Typography variant="h5" gutterBottom component="div" sx={{ p: 2, pb: 0 }}>
+          Soccer Teams
+        </Typography>
+        <ImageList variant="masonry" cols={2}>
+          {teams.map((item) => (
+            <ImageListItem key={item.image}>
+              <img
+                src={`${item.image}?w=248&fit=crop&auto=format`}
+                srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                alt={item.title}
+                loading="lazy"
+              />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      </Container>
+
+      <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+        <Toolbar>
+          <IconButton color="inherit" aria-label="open drawer">
+            <MenuIcon />
+          </IconButton>
+          <StyledFab component={Link} to="/soccer/team/form/0" color="secondary" aria-label="add">
+            <AddIcon />
+          </StyledFab>
+          <Box sx={{ flexGrow: 1 }} />
+        </Toolbar>
+      </AppBar>
+    </>
+  );
 }
 
 export default TeamPage;
