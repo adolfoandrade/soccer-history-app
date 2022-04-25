@@ -136,6 +136,31 @@ namespace App.Infra.Data.Repository
             }
         }
 
+        public async Task<IEnumerable<SoccerEvent>> FilterAsync(int seasonId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT *
+                            FROM Events AS E
+                            LEFT JOIN Matches AS M ON M.Id = E.Id
+                            LEFT JOIN SoccerTeams H ON H.Id = E.HomeTeamId
+                            LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId";
+                try
+                {
+                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
+                        soccerEvent.Match = match;
+                        soccerEvent.Home = homeTeam;
+                        soccerEvent.Out = outTeam;
+                        return soccerEvent;
+                    }, splitOn: "Id");
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryBySeasonSoccerEventException(ex.Message, ex);
+                }
+            }
+        }
+
         public async Task<int> UpdateAsync(SoccerEvent soccerEvent)
         {
             using (var connection = _connectionFactory.CreateConnection())

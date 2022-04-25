@@ -1,5 +1,6 @@
 ﻿using App.Models;
 using App.Service.ViewModels;
+using App.Service.ViewModels.SoccerEvent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace App.Service.Interfaces
     {
         Task<SoccerEventSeasonVM> GetBySeasonAsync(int competitionId, string season);
         Task<SoccerEventMatchVM> GetByMatchAsync(string match, int competitionId);
+        Task<FilterEventResultVM> Filter(EventFilterVM vm);
         Task<SoccerEventVM> GetAsync(int id);
         Task<int> AddAsync(AddSoccerEventVM soccerEvent);
         Task<bool> UpdateAsync(UpdateSoccerEventVM soccerEvent);

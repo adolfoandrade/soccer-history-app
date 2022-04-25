@@ -3,6 +3,7 @@ using App.Domain.Interfaces;
 using App.Models;
 using App.Service.Interfaces;
 using App.Service.ViewModels;
+using App.Service.ViewModels.SoccerEvent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,11 @@ namespace App.Service
             {
                 throw new DeleteSoccerEventException(ex.Message, ex);
             }
+        }
+
+        public Task<FilterEventResultVM> Filter(EventFilterVM vm)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<SoccerEventVM> GetAsync(int id)

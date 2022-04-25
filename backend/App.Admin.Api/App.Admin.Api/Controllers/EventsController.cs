@@ -1,6 +1,7 @@
 ﻿using App.Domain.Exceptions.SoccerEvent;
 using App.Service.Interfaces;
 using App.Service.ViewModels;
+using App.Service.ViewModels.SoccerEvent;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,25 @@ namespace App.Admin.Api.Controllers
         {
             _logger = logger;
             _service = service;
+        }
+
+        [HttpGet("filter/{competitionId}/{season}")]
+        [ProducesResponseType(typeof(SoccerEventMatchVM), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Filter(EventFilterVM vm)
+        {
+            try
+            {
+                var result = await _service.Filter(vm);
+                return Ok(result);
+            }
+            catch (QueryBySeasonSoccerEventException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
         }
 
         [HttpGet("matches/{match}/{competitionId}")]
