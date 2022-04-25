@@ -114,7 +114,7 @@ namespace App.Admin.Api.Controllers
         {
             string systemFileName = files.FileName;
             string baseUrl = $"https://soccer.blob.core.windows.net/teams/{systemFileName}";
-            string blobstorageconnection = "DefaultEndpointsProtocol=https;AccountName=soccer;AccountKey=bTLerzicIaITKhTlxVx0QVYpfB/ymB76o2915zEu0hgFWbNdju6HdQUQi9KfhObtY+b+ImzRFzpFVhbilm8zbQ==;EndpointSuffix=core.windows.net";
+            string blobstorageconnection = "DefaultEndpointsProtocol=https;AccountName=soccer;AccountKey=*****;EndpointSuffix=core.windows.net";
             // Retrieve storage account from connection string.    
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
             // Create the blob client.    
