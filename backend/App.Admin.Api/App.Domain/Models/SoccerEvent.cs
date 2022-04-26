@@ -1,4 +1,6 @@
-﻿using System;
+﻿using App.Domain.Models;
+using System;
+using System.Collections.Generic;
 
 namespace App.Models
 {
@@ -14,5 +16,6 @@ namespace App.Models
         public int OutTeamId { get; set; }
         public string Referee { get; set; }
         public string Venue { get; set; }
+        public List<EventTimeStatistic> EventTimeStatistics { get; set; }
     }
 }

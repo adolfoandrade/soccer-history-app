@@ -11,7 +11,7 @@ namespace App.Service.Interfaces
         Task<SoccerEventSeasonVM> GetBySeasonAsync(int competitionId, string season);
         Task<SoccerEventMatchVM> GetByMatchAsync(string match, int competitionId);
         Task<FilterEventResultVM> Filter(EventFilterVM vm);
-        Task<SoccerEventVM> GetAsync(int id);
+        Task<SoccerEventDetailsVM> GetAsync(int id);
         Task<int> AddAsync(AddSoccerEventVM soccerEvent);
         Task<bool> UpdateAsync(UpdateSoccerEventVM soccerEvent);
         Task<bool> DeleteAsync(int id);

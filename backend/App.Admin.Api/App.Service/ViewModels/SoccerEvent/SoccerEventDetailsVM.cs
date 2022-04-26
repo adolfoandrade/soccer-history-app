@@ -1,12 +1,9 @@
-﻿using App.Domain.Models;
-using App.Service.ViewModels.SoccerEvent;
-using App.Service.ViewModels.Statistic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace App.Service.ViewModels
+namespace App.Service.ViewModels.SoccerEvent
 {
-    public class SoccerEventVM
+    public class SoccerEventDetailsVM
     {
         public int Id { get; set; }
         public int MatchId { get; set; }
@@ -17,6 +14,8 @@ namespace App.Service.ViewModels
         public int OutTeamId { get; set; }
         public string Referee { get; set; }
         public string Venue { get; set; }
-        public IEnumerable<EventTimeStatisticVM> EventTimeStatistics { get; set; }
+        public IEnumerable<EventGoalVM> Goals { get; set; }
+        public IEnumerable<EventCardVM> Cards { get; set; }
+        public IEnumerable<EventStatisticVM> Statistics { get; set; }
     }
 }

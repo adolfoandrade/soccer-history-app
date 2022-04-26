@@ -35,7 +35,7 @@ const StyledFab = styled(Fab)({
 });
 
 function TeamPage() {
-
+  
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {

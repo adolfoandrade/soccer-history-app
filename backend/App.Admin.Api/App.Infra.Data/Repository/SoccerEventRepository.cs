@@ -1,9 +1,11 @@
 ﻿using App.Domain.Exceptions.SoccerEvent;
 using App.Domain.Interfaces;
+using App.Domain.Models;
 using App.Models;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Infra.Data.Repository
@@ -66,18 +68,62 @@ namespace App.Infra.Data.Repository
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var query = $@"SELECT [Id]
-                                  ,[MatchId]
-                                  ,[Date]
-                                  ,[HomeTeamId]
-                                  ,[OutTeamId]
-                                  ,[Referee]
-                                  ,[Venue]
-                              FROM [dbo].[Events]
-                              WHERE [Id] = @Id";
+                var query = $@"SELECT *
+                            FROM Events AS E
+                            LEFT JOIN Matches AS M ON M.Id = E.Id
+                            LEFT JOIN SoccerTeams H ON H.Id = E.HomeTeamId
+                            LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId
+                            WHERE E.Id = @Id";
+                var queryGoals = $@"SELECT * FROM EventTimeStatistics AS ET
+                                    INNER JOIN GoalsStatistics AS G ON G.EventTimeStatisticId = ET.Id
+                                    INNER JOIN SoccerTeams AS ST ON ST.Id = ET.SoccerTeamId
+                                    WHERE ET.EventId = @Id";
+                var queryCards = $@"SELECT * FROM EventTimeStatistics AS ET
+                                    INNER JOIN CardsStatistics AS CS ON CS.EventTimeStatisticId = ET.Id
+                                    INNER JOIN SoccerTeams AS ST ON ST.Id = ET.SoccerTeamId
+                                    WHERE ET.EventId = @Id";
+                var queryStatistics = $@"SELECT * FROM EventTimeStatistics AS ET
+                                        INNER JOIN EventStatistics AS ES ON ES.EventTimeStatisticId = ET.Id
+                                        INNER JOIN SoccerTeams AS ST ON ST.Id = ET.SoccerTeamId
+                                        WHERE ET.EventId = @Id";
                 try
                 {
-                    return await connection.QueryFirstAsync<SoccerEvent>(query, new { Id = id });
+                    var @event = await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
+                        soccerEvent.Match = match;
+                        soccerEvent.Home = homeTeam;
+                        soccerEvent.Out = outTeam;
+                        return soccerEvent;
+                    }, new { Id = id }, splitOn: "Id");
+
+                    var soccerEvent = @event.FirstOrDefault();
+
+                    var goals = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventGol, SoccerTeam, EventTimeStatistic>(queryGoals, (eventTime, goal, soccerTeam) => {
+                        eventTime.Goal = goal;
+                        eventTime.SoccerTeam = soccerTeam;
+                        return eventTime;
+                    }, new { Id = id }, splitOn: "Id");
+
+                    var cards = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventCard, SoccerTeam, EventTimeStatistic>(queryCards, (eventTime, card, soccerTeam) => {
+                        eventTime.Card = card;
+                        eventTime.SoccerTeam = soccerTeam;
+                        return eventTime;
+                    }, new { Id = id }, splitOn: "Id");
+
+                    var statistics = await connection.QueryAsync<EventTimeStatistic, Statistic, SoccerTeam, EventTimeStatistic>(queryStatistics, (eventTime, statistic, soccerTeam) => {
+                        eventTime.Statistic = statistic;
+                        eventTime.SoccerTeam = soccerTeam;
+                        return eventTime;
+                    }, new { Id = id }, splitOn: "Id");
+
+                    if(soccerEvent != null)
+                    {
+                        soccerEvent.EventTimeStatistics = new List<EventTimeStatistic>();
+                        soccerEvent.EventTimeStatistics.AddRange(goals);
+                        soccerEvent.EventTimeStatistics.AddRange(cards);
+                        soccerEvent.EventTimeStatistics.AddRange(statistics);
+                    }
+
+                    return soccerEvent;
                 }
                 catch (Exception ex)
                 {

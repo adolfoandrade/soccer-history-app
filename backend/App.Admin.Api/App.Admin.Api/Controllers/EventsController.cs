@@ -80,6 +80,25 @@ namespace App.Admin.Api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(SoccerEventDetailsVM), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var result = await _service.GetAsync(id);
+                return Ok(result);
+            }
+            catch (QueryBySeasonSoccerEventException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+        }
+
         [HttpPost]
         [ApiExplorerSettings(GroupName = "v1")]
         [ProducesResponseType(typeof(CompetitionVM), StatusCodes.Status201Created)]

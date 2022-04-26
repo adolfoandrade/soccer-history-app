@@ -78,12 +78,12 @@ namespace App.Service
             throw new NotImplementedException();
         }
 
-        public async Task<SoccerEventVM> GetAsync(int id)
+        public async Task<SoccerEventDetailsVM> GetAsync(int id)
         {
             try
             {
                 var @event = await _repository.GetAsync(id);
-                var vm = @event.ToVM();
+                var vm = @event.ToDetailsVM();
                 return vm;
             }
             catch (QuerySoccerEventException ex)
