@@ -27,9 +27,14 @@ namespace App.Service
             try
             {
                 var entity = vm.ToEntity();
-                if(entity.EventTimeStatistic.Id <= 0 || entity.EventTimeStatisticId <= 0)
+                var eventTime = await _eventTimeStatisticRepository.GetAsync(vm.EventId, (int)entity.EventTimeStatistic.Half, vm.SoccerTeamId);
+                if(eventTime is null)
                 {
                     entity.EventTimeStatisticId = await _eventTimeStatisticRepository.AddAsync(entity.EventTimeStatistic);
+                }
+                else
+                {
+                    entity.EventTimeStatisticId = eventTime.Id;
                 }
                 return await _repository.AddAsync(entity);
             }
@@ -42,5 +47,7 @@ namespace App.Service
                 throw new AddSoccerTeamEventGoalsException(ex.Message, ex);
             }
         }
+
+       
     }
 }

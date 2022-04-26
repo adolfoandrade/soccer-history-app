@@ -1,4 +1,5 @@
 ﻿using App.Domain.Exceptions;
+using App.Domain.Exceptions.Statistic;
 using App.Domain.Interfaces;
 using App.Domain.Models;
 using Dapper;
@@ -39,5 +40,27 @@ namespace App.Infra.Data.Repository
                 }
             }
         }
+
+        public async Task<EventTimeStatistic> GetAsync(int eventId, int half, int soccerTeamId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT [Id]
+                                  ,[Half]
+                                  ,[EventId]
+                                  ,[SoccerTeamId]
+                              FROM [dbo].[EventTimeStatistics]
+                              WHERE Half = @half AND EventId = @eventId AND SoccerTeamId = @SoccerTeamId";
+                try
+                {
+                    return await connection.QueryFirstOrDefaultAsync<EventTimeStatistic>(query, new { Half = half, EventId = eventId, SoccerTeamId = soccerTeamId });
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryEventTimeStatisticException(ex.Message, ex);
+                }
+            }
+        }
+
     }
 }

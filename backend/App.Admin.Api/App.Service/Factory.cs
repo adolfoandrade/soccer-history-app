@@ -142,6 +142,9 @@ namespace App.Service
             vm.Cards = entity.EventTimeStatistics.Where(x => x.Card != null && x.Card.Id > 0).ToEventCardVM().OrderByDescending(x => x.Card.Minute);
             vm.Statistics = entity.EventTimeStatistics.Where(x => x.Statistic != null && x.Statistic.Id > 0).ToEventStatisticVM();
 
+            vm.Home.Goals = vm.Goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
+            vm.Out.Goals = vm.Goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
+
             return vm;
         }
 
@@ -413,7 +416,8 @@ namespace App.Service
             if (vm is null)
                 return entity;
 
-            entity.EventTimeStatistic = vm.EventTimeStatistic.ToEntity();
+            Enum.TryParse(vm.Half, out SoccerTimers half);
+            entity.EventTimeStatistic = new EventTimeStatistic() { SoccerTeamId = vm.SoccerTeamId, Half = half, EventId = vm.EventId };
             entity.Minute = vm.Minute;
             entity.Player = vm.Player;
             entity.Assist = vm.Assist;

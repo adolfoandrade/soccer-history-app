@@ -37,9 +37,9 @@ namespace App.Service
                     match = new Match { CompetitionId = vm.CompetitionId, Number = vm.MatchNumber };
                     await _matchRepository.AddAsync(match);
                     match = await _matchRepository.GetByMatchNumerAsync(vm.MatchNumber, vm.CompetitionId);
-                    entity.MatchId = match.Id;
-                    entity.Match = match;
                 }
+                entity.MatchId = match.Id;
+                entity.Match = match;
                 return await _repository.AddAsync(entity);
             }
             catch (QueryMatchException ex)
