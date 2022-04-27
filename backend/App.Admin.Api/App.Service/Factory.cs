@@ -121,8 +121,6 @@ namespace App.Service
             return vm;
         }
 
-
-
         public static SoccerEventDetailsVM ToDetailsVM(this SoccerEvent entity)
         {
             var vm = new SoccerEventDetailsVM();
@@ -138,12 +136,94 @@ namespace App.Service
             vm.Venue = entity.Venue;
             vm.Home = entity.Home.ToSoccerTeamEventVM();
             vm.Out = entity.Out.ToSoccerTeamEventVM();
-            vm.Goals = entity.EventTimeStatistics.Where(x => x.Goal != null && x.Goal.Id > 0).ToEventGoalVM().OrderByDescending(x => x.Goal.Minute);
-            vm.Cards = entity.EventTimeStatistics.Where(x => x.Card != null && x.Card.Id > 0).ToEventCardVM().OrderByDescending(x => x.Card.Minute);
+            var goals = entity.EventTimeStatistics.Where(x => x.Goal != null && x.Goal.Id > 0).ToEventGoalVM().ToTimeLineVM();
+            var cards = entity.EventTimeStatistics.Where(x => x.Card != null && x.Card.Id > 0).ToEventCardVM().ToTimeLineVM();
+            vm.TimeLine = new List<EventTimeLineVM>();
+            vm.TimeLine.AddRange(goals);
+            vm.TimeLine.AddRange(cards);
+            vm.TimeLine = vm.TimeLine.OrderByDescending(x => x.Item.Minute).ToList();
             vm.Statistics = entity.EventTimeStatistics.Where(x => x.Statistic != null && x.Statistic.Id > 0).ToEventStatisticVM();
 
-            vm.Home.Goals = vm.Goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
-            vm.Out.Goals = vm.Goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
+            vm.Home.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
+            vm.Out.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
+
+            return vm;
+        }
+
+        public static List<EventTimeLineVM> ToTimeLineVM(this IEnumerable<EventGoalVM> entities)
+        {
+            var vm = new List<EventTimeLineVM>();
+            foreach (var entity in entities)
+            {
+                vm.Add(entity.ToTimeLineItemVM());
+            }
+            return vm;
+        }
+
+        public static List<EventTimeLineVM> ToTimeLineVM(this IEnumerable<EventCardVM> entities)
+        {
+            var vm = new List<EventTimeLineVM>();
+            foreach (var entity in entities)
+            {
+                vm.Add(entity.ToTimeLineItemVM());
+            }
+            return vm;
+        }
+
+        public static EventTimeLineVM ToTimeLineItemVM(this EventGoalVM entity)
+        {
+            var vm = new EventTimeLineVM();
+            if (entity is null)
+                return vm;
+
+            vm.Id = entity.Id;
+            vm.Half = entity.Half.ToString();
+            vm.SoccerTeam = entity.SoccerTeam;
+            vm.Item = entity.Goal.ToTimeLineItemVM();
+
+            return vm;
+        }
+
+        public static EventTimeLineVM ToTimeLineItemVM(this EventCardVM entity)
+        {
+            var vm = new EventTimeLineVM();
+            if (entity is null)
+                return vm;
+
+            vm.Id = entity.Id;
+            vm.Half = entity.Half.ToString();
+            vm.SoccerTeam = entity.SoccerTeam;
+            vm.Item = entity.Card.ToTimeLineItemVM();
+
+            return vm;
+        }
+
+        public static TimeLineItemVM ToTimeLineItemVM(this SoccerTeamEventGolVM entity)
+        {
+            var vm = new TimeLineItemVM();
+            if (entity is null)
+                return vm;
+
+            vm.Id = entity.Id;
+            vm.Type = "GOAL";
+            vm.Assist = entity.Assist;
+            vm.Player = entity.Player;
+            vm.Minute = entity.Minute;
+
+            return vm;
+        }
+
+        public static TimeLineItemVM ToTimeLineItemVM(this SoccerTeamEventCardVM entity)
+        {
+            var vm = new TimeLineItemVM();
+            if (entity is null)
+                return vm;
+
+            vm.Id = entity.Id;
+            vm.Type = "CARD";
+            vm.Color = entity.Color;
+            vm.Player = entity.Player;
+            vm.Minute = entity.Minute;
 
             return vm;
         }
@@ -319,6 +399,8 @@ namespace App.Service
             vm.Country = entity.Country;
             vm.Image = entity.Image;
             vm.Name = entity.Name;
+            vm.ColorTheme = entity.ColorTheme;
+            vm.SecondColorTheme = entity.SecondColorTheme;
 
             return vm;
         }
@@ -333,6 +415,8 @@ namespace App.Service
             vm.Country = entity.Country;
             vm.Image = entity.Image;
             vm.Name = entity.Name;
+            vm.ColorTheme = entity.ColorTheme;
+            vm.SecondColorTheme= entity.SecondColorTheme;
             vm.Created = entity.Created;
             vm.Updated = entity.Updated;
 
@@ -358,6 +442,8 @@ namespace App.Service
             entity.Country = vm.Country;
             entity.Image = vm.Image;
             entity.Name = vm.Name;
+            entity.ColorTheme = vm.ColorTheme;
+            entity.SecondColorTheme = vm.SecondColorTheme;
             entity.Created = vm.Created;
             entity.Updated = vm.Updated;
 
@@ -374,6 +460,8 @@ namespace App.Service
             entity.Country = vm.Country;
             entity.Image = vm.Image;
             entity.Name = vm.Name;
+            entity.ColorTheme = vm.ColorTheme;
+            entity.SecondColorTheme = vm.SecondColorTheme;
             entity.Created = vm.Created;
             entity.Updated = vm.Updated;
 
@@ -432,7 +520,8 @@ namespace App.Service
             if (vm is null)
                 return entity;
 
-            entity.EventTimeStatistic = vm.EventTimeStatistic.ToEntity();
+            Enum.TryParse(vm.Half, out SoccerTimers half);
+            entity.EventTimeStatistic = new EventTimeStatistic() { SoccerTeamId = vm.SoccerTeamId, Half = half, EventId = vm.EventId };
             entity.Minute = vm.Minute;
             entity.Player = vm.Player;
             entity.Color = vm.Color;

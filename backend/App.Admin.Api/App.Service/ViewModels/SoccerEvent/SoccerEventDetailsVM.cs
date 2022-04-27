@@ -14,8 +14,7 @@ namespace App.Service.ViewModels.SoccerEvent
         public int OutTeamId { get; set; }
         public string Referee { get; set; }
         public string Venue { get; set; }
-        public IEnumerable<EventGoalVM> Goals { get; set; }
-        public IEnumerable<EventCardVM> Cards { get; set; }
-        public IEnumerable<EventStatisticVM> Statistics { get; set; }
+        public List<EventTimeLineVM> TimeLine { get; set; }
+        public List<EventStatisticVM> Statistics { get; set; }
     }
 }
