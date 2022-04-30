@@ -536,8 +536,8 @@ namespace App.Service
             if (vm is null)
                 return entity;
 
-            entity.EventTimeStatistic = vm.EventTimeStatistic.ToEntity();
-            entity.EventTimeStatisticId = vm.EventTimeStatisticId;
+            Enum.TryParse(vm.Half, out SoccerTimers half);
+            entity.EventTimeStatistic = new EventTimeStatistic() { SoccerTeamId = vm.SoccerTeamId, Half = half, EventId = vm.EventId };
             entity.BallPossession = vm.BallPossession;
             entity.GoalAttempts = vm.GoalAttempts;
             entity.ShotsOnGoal = vm.ShotsOnGoal;

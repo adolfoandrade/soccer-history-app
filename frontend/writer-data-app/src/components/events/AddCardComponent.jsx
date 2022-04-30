@@ -43,9 +43,8 @@ function AddCardComponent(props) {
                         },
                         body: JSON.stringify(values),
                     }).then((res) => {
-                        console.log(res);
                         if (res.created) {
-                            console.log(res);
+                            
                         }
                     });
                 }}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -55,6 +55,21 @@ function EventDetailsPage() {
     marginBottom: "1rem",
   };
 
+  const scrollbar = theme => ({
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: '0.4em'
+      },
+      '*::-webkit-scrollbar-track': {
+        '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: 'rgba(0,0,0,.1)',
+        outline: '1px solid slategrey'
+      }
+    }
+  });
+
   const { id } = useParams();
 
   const [soccerEvent, setSoccerEvent] = useState({});
@@ -67,10 +82,10 @@ function EventDetailsPage() {
   const handleCloseAddGoal = () => setOpenGoal(false);
 
   useEffect(() => {
-    function getEvents(){
+    function getEvents() {
       fetch(`https://localhost:5001/api/Events/${id}`)
-      .then((response) => response.json())
-      .then((data) => setSoccerEvent(data));
+        .then((response) => response.json())
+        .then((data) => setSoccerEvent(data));
     }
     getEvents();
   }, [AddGoalComponent, AddCardComponent]);
@@ -85,6 +100,7 @@ function EventDetailsPage() {
       >
         <AddCardComponent item={soccerEvent} />
       </Modal>
+
       <Modal
         open={openGoal}
         onClose={handleCloseAddGoal}
@@ -93,6 +109,7 @@ function EventDetailsPage() {
       >
         <AddGoalComponent item={soccerEvent} />
       </Modal>
+
       <Container key="game-score-header">
         <div className="flex-container" style={StyledGameScore}>
           <div>
@@ -140,12 +157,24 @@ function EventDetailsPage() {
           >
             <SportsSoccerIcon />
           </StyledFabAddGoal>
-          <StyledFabAddCard color="secondary" aria-label="add" onClick={handleOpenCard}>
+          <StyledFabAddCard
+            color="secondary"
+            aria-label="add"
+            onClick={handleOpenCard}
+          >
             <SportsIcon />
           </StyledFabAddCard>
-          <StyledFabAddStatistic color="secondary" aria-label="add">
-            <EqualizerIcon />
-          </StyledFabAddStatistic>
+          <Link
+            to={`/statistic/common/add/${id}`}
+          >
+            <StyledFabAddStatistic
+              color="secondary"
+              aria-label="add"
+
+            >
+              <EqualizerIcon />
+            </StyledFabAddStatistic>
+          </Link>
           <Box sx={{ flexGrow: 1 }} />
           <IconButton color="inherit">
             <SearchIcon />

@@ -5,6 +5,7 @@ import EventPage from "./views/Events/EventPage/EventPage";
 import TeamForm from "./views/Teams/TeamForm/TeamForm";
 import EventForm from "./views/Events/EventForm/EventForm";
 import EventDetailsPage from "./views/Events/EventPage/EventDetailsPage";
+import AddCommonStatisticComponent from "./views/Events/EventForm/AddCommonStatisticForm";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<EventPage></EventPage>}></Route>
         <Route path="/add" element={<EventForm></EventForm>}></Route>
         <Route path="/details/:id" element={<EventDetailsPage></EventDetailsPage>}></Route>
+        <Route path="/statistic/common/add/:id" element={<AddCommonStatisticComponent></AddCommonStatisticComponent>}></Route>
         <Route path="/soccer/team" element={<TeamPage></TeamPage>}></Route>
         <Route path="/soccer/team/form/:id" element={<TeamForm></TeamForm>}></Route>
       </Routes>

@@ -2,7 +2,9 @@
 {
     public class AddCommonStatisticVM
     {
-        public EventTimeStatisticVM EventTimeStatistic { get; set; }
+        public string Half { get; set; }
+        public int EventId { get; set; }
+        public int SoccerTeamId { get; set; }
         public int EventTimeStatisticId { get; set; }
         public int BallPossession { get; set; }
         public int GoalAttempts { get; set; }
