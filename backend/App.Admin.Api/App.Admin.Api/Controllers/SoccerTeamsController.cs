@@ -112,9 +112,9 @@ namespace App.Admin.Api.Controllers
         [HttpPost(nameof(UploadFile))]
         public async Task<IActionResult> UploadFile(IFormFile files)
         {
+            var blobstorageconnection = Environment.GetEnvironmentVariable("SOCCER_APP_SQLSERVER", EnvironmentVariableTarget.Machine);
             string systemFileName = files.FileName;
             string baseUrl = $"https://soccer.blob.core.windows.net/teams/{systemFileName}";
-            string blobstorageconnection = "DefaultEndpointsProtocol=https;AccountName=soccer;AccountKey=*****;EndpointSuffix=core.windows.net";
             // Retrieve storage account from connection string.    
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
             // Create the blob client.    
