@@ -1,0 +1,12 @@
+{
+  "ServerUri": "http://mrpopo-sonar.northcentralus.cloudapp.azure.com:9000/",
+  "Organization": null,
+  "ProjectKey": "soccer-app",
+  "ProjectName": "soccer-app",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AYB_WH0AuL-m4ncRwtS6",
+      "ProfileTimestamp": "2022-05-01T11:19:07Z"
+    }
+  }
+}
