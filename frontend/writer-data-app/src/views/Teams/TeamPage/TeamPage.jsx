@@ -39,7 +39,7 @@ function TeamPage() {
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/SoccerTeams")
+    fetch("https://soccer-app-api.azurewebsites.net/api/SoccerTeams")
       .then((response) => response.json())
       .then((data) => setTeams(data));
   }, []);

@@ -83,7 +83,7 @@ function EventDetailsPage() {
 
   useEffect(() => {
     function getEvents() {
-      fetch(`https://localhost:5001/api/Events/${id}`)
+      fetch(`https://soccer-app-api.azurewebsites.net/api/Events/${id}`)
         .then((response) => response.json())
         .then((data) => setSoccerEvent(data));
     }

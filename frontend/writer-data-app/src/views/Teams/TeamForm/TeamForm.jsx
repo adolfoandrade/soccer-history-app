@@ -51,7 +51,7 @@ function TeamForm() {
     const formData = new FormData();
     formData.append('files', e.target.files[0]);
     var file = e.target.files[0];
-    fetch('https://localhost:5001/api/SoccerTeams/UploadFile', {
+    fetch('https://soccer-app-api.azurewebsites.net/api/SoccerTeams/UploadFile', {
       method: 'post',
       body: formData
     }).then(res => {
@@ -64,7 +64,7 @@ function TeamForm() {
 
   useEffect(() => {
     if (id !== "0") {
-      fetch(`https://localhost:5001/api/SoccerTeams/${id}`)
+      fetch(`https://soccer-app-api.azurewebsites.net/api/SoccerTeams/${id}`)
         .then((response) => response.json())
         .then((data) => setSoccerTeam(data));
     }
@@ -82,7 +82,7 @@ function TeamForm() {
           onSubmit={async (values) => {
             //alert(JSON.stringify(values, null, 2));
             console.log(values);
-            fetch('https://localhost:5001/api/SoccerTeams', {
+            fetch('https://soccer-app-api.azurewebsites.net/api/SoccerTeams', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

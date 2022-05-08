@@ -14,11 +14,11 @@ function EventForm() {
   const [competitions, setCompetitions] = useState([]);
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/SoccerTeams")
+    fetch("https://soccer-app-api.azurewebsites.net/api/SoccerTeams")
       .then((response) => response.json())
       .then((data) => setSoccerTeams(data));
 
-    fetch("https://localhost:5001/api/Competitions/2022")
+    fetch("https://soccer-app-api.azurewebsites.net/api/Competitions/2022")
       .then((response) => response.json())
       .then((data) => setCompetitions(data));
   }, []);

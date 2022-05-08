@@ -36,7 +36,7 @@ function AddCardComponent(props) {
                 }}
                 onSubmit={async (values) => {
                     console.log(values);
-                    fetch("https://localhost:5001/api/Statistics/cards", {
+                    fetch("https://soccer-app-api.azurewebsites.net/api/Statistics/cards", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

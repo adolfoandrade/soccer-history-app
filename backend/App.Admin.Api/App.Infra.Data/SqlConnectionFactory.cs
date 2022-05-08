@@ -11,7 +11,7 @@ namespace app.api.Infrastructure
     {
         public IDbConnection CreateConnection()
         {
-            var connection = Environment.GetEnvironmentVariable("SOCCER_APP_SQLSERVER", EnvironmentVariableTarget.Machine);
+            var connection = Environment.GetEnvironmentVariable("SOCCER_APP_SQLSERVER");
             return new SqlConnection(connection);
         }
 

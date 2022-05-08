@@ -36,7 +36,7 @@ function AddGoalComponent(props) {
                 }}
                 onSubmit={async (values) => {
                     console.log(values);
-                    fetch("https://localhost:5001/api/Statistics/goals", {
+                    fetch("https://soccer-app-api.azurewebsites.net/api/Statistics/goals", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
