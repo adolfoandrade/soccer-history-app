@@ -50,8 +50,8 @@ function TournamentPage() {
         <ul style={{ listStyleType: 'none' }}>
           {competitions.map((item) => (
             <li key={item.image} style={{ margin: "0 auto", display: "inline-block", padding: "20px" }}>
-                <Link to="/events">
-                <img style={{ border: "#ccc 1px solid", borderRadius: "5px" }}
+                <Link to={`/events/${item.id}`}>
+                <img style={{  }}
                     src={`${item.image}?w=248&fit=crop&auto=format`}
                     srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
                     alt={item.title}

@@ -163,9 +163,10 @@ namespace App.Infra.Data.Repository
             {
                 var query = $@"SELECT *
                             FROM Events AS E
-                            LEFT JOIN Matches AS M ON M.Id = E.Id
+                            LEFT JOIN Matches AS M ON M.Id  = E.MatchId
                             LEFT JOIN SoccerTeams H ON H.Id = E.HomeTeamId
-                            LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId";
+                            LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId
+                            WHERE M.CompetitionId = @SeasonId";
                 try
                 {
                     return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
@@ -173,7 +174,7 @@ namespace App.Infra.Data.Repository
                         soccerEvent.Home = homeTeam;
                         soccerEvent.Out = outTeam;
                         return soccerEvent;
-                    }, splitOn: "Id");
+                    }, new { SeasonId = seasonId }, splitOn: "Id");
                 }
                 catch (Exception ex)
                 {

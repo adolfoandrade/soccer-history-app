@@ -123,13 +123,14 @@ namespace App.Service
             {
                 var vm = new SoccerEventSeasonVM();
                 var competitions = await _competitionRepository.GetBySeasonAsync(season);
-                var theSeason = competitions.FirstOrDefault(x => x.Id == competitionId);
-                var seasonEvents = await _repository.GetBySeasonAsync(theSeason.Id);
+                var theCompetition = competitions.FirstOrDefault(x => x.Id == competitionId);
+                var seasonEvents = await _repository.GetBySeasonAsync(theCompetition.Id);
                 var matches = seasonEvents.Select(x => x.Match)
+                                            .Where(x => x != null)
                                             .GroupBy(x => x.Number)
                                             .Select(g => g.First())
                                             .ToList();
-                vm.Season = theSeason.ToVM();
+                vm.Season = theCompetition.ToVM();
                 var @events = new List<SoccerEventMatchVM>();
                 foreach (var match in matches)
                 {
