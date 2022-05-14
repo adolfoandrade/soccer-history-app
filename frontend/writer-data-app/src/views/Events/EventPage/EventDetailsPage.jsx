@@ -14,10 +14,11 @@ import EqualizerIcon from "@mui/icons-material/Equalizer";
 import { Box, Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
 
-import TimeLineGoalComponent from "../../../components/events/TimeLineGoalComponent";
-import TimeLineCardComponent from "../../../components/events/TimeLineCardComponent";
-import AddGoalComponent from "../../../components/events/AddGoalComponent";
-import AddCardComponent from "../../../components/events/AddCardComponent";
+import TimeLineGoalComponent    from "../../../components/events/TimeLineGoalComponent";
+import TimeLineCardComponent    from "../../../components/events/TimeLineCardComponent";
+import AddGoalComponent         from "../../../components/events/AddGoalComponent";
+import AddCardComponent         from "../../../components/events/AddCardComponent";
+import StatistcDetailsComponent from "../../../components/events/StatisticDetailsComponent";
 
 function EventDetailsPage() {
   const StyledFabAddGoal = styled(Fab)({
@@ -73,7 +74,7 @@ function EventDetailsPage() {
         .then((data) => setSoccerEvent(data));
     }
     getEvents();
-  }, []);
+  }, [id]);
 
   return (
     <div>
@@ -121,6 +122,9 @@ function EventDetailsPage() {
             <img alt="" src={soccerEvent?.out?.image} />
           </div>
         </div>
+      </Container>
+      <Container>
+        <StatistcDetailsComponent item={soccerEvent} />
       </Container>
       <Container style={{ marginBottom: "300px" }} key="game-time-line">
         {soccerEvent?.timeLine?.map((item) => (

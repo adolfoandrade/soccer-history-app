@@ -1,5 +1,4 @@
-﻿using App.Models;
-using App.Service.ViewModels;
+﻿using App.Service.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

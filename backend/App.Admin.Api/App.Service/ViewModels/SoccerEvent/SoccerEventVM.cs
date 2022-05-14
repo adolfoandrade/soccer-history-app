@@ -1,5 +1,4 @@
-﻿using App.Domain.Models;
-using App.Service.ViewModels.SoccerEvent;
+﻿using App.Service.ViewModels.SoccerEvent;
 using App.Service.ViewModels.Statistic;
 using System;
 using System.Collections.Generic;

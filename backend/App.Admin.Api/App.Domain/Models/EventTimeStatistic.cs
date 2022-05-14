@@ -1,6 +1,5 @@
 ﻿using App.Domain.Models.Enum;
 using App.Models;
-using System.Collections.Generic;
 
 namespace App.Domain.Models
 {

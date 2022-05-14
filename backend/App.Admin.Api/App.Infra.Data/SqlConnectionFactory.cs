@@ -1,6 +1,4 @@
 ﻿using App.Domain.Interfaces;
-using App.Infra.Data;
-using Microsoft.Extensions.Options;
 using System;
 using System.Data;
 using System.Data.SqlClient;

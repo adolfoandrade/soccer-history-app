@@ -3,6 +3,7 @@
     public enum SoccerTimers
     {
         FIRST_HALF = 1,
-        SECOND_HALF = 2
+        SECOND_HALF = 2,
+        FULL = 3
     }
 }

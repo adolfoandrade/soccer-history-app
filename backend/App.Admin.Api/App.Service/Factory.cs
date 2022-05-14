@@ -62,14 +62,12 @@ namespace App.Service
             if (vm is null)
                 return entity;
 
-            //entity.MatchId = vm.MatchId;
             entity.Match = new Match() { CompetitionId = vm.CompetitionId, Number = vm.MatchNumber };
             entity.Date = vm.Date;
             entity.HomeTeamId = vm.HomeTeamId;
             entity.OutTeamId = vm.OutTeamId;
             entity.Referee = vm.Referee;
             entity.Venue = vm.Venue;
-            //entity.Match = vm.Match.ToEntity();
 
             return entity;
         }
@@ -143,9 +141,41 @@ namespace App.Service
             vm.TimeLine.AddRange(cards);
             vm.TimeLine = vm.TimeLine.OrderByDescending(x => x.Item.Minute).ToList();
             vm.Statistics = entity.EventTimeStatistics.Where(x => x.Statistic != null && x.Statistic.Id > 0).ToEventStatisticVM();
-
+            var fullStatisticHomeTeam = vm.Statistics.GetFullStatistic(entity.Home);
+            var fullStatisticAwayTeam = vm.Statistics.GetFullStatistic(entity.Out);
             vm.Home.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
             vm.Out.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
+
+            return vm;
+        }
+
+        public static EventStatisticVM GetFullStatistic(this IEnumerable<EventStatisticVM> entities, SoccerTeam team)
+        {
+            var vm = new EventStatisticVM();
+
+            entities = entities.Where(x => x.SoccerTeam.Id == team.Id);
+            vm.Id = 99999999;
+            vm.Half = "FULL";
+            vm.SoccerTeam = team.ToVM();
+            vm.Statistic = new StatisticVM();
+            vm.Statistic.BallPossession = entities.Sum(x => x.Statistic.BallPossession);
+            vm.Statistic.GoalAttempts = entities.Sum(x => x.Statistic.GoalAttempts);
+            vm.Statistic.ShotsOnGoal = entities.Sum(x => x.Statistic.ShotsOnGoal);
+            vm.Statistic.ShotsOffGoal = entities.Sum(x => x.Statistic.ShotsOffGoal);
+            vm.Statistic.BlockedShots = entities.Sum(x => x.Statistic.BlockedShots);
+            vm.Statistic.CornerKicks = entities.Sum(x => x.Statistic.CornerKicks);
+            vm.Statistic.FreeKicks = entities.Sum(x => x.Statistic.FreeKicks);
+            vm.Statistic.Offsides = entities.Sum(x => x.Statistic.Offsides);
+            vm.Statistic.Throwin = entities.Sum(x => x.Statistic.Throwin);
+            vm.Statistic.GoalkeeperSaves = entities.Sum(x => x.Statistic.GoalkeeperSaves);
+            vm.Statistic.Fouls = entities.Sum(x => x.Statistic.Fouls);
+            vm.Statistic.YellowCards = entities.Sum(x => x.Statistic.YellowCards);
+            vm.Statistic.RedCards = entities.Sum(x => x.Statistic.RedCards);
+            vm.Statistic.TotalPasses = entities.Sum(x => x.Statistic.TotalPasses);
+            vm.Statistic.CompletedPasses = entities.Sum(x => x.Statistic.CompletedPasses);
+            vm.Statistic.Trackles = entities.Sum(x => x.Statistic.Trackles);
+            vm.Statistic.Attacks = entities.Sum(x => x.Statistic.Attacks);
+            vm.Statistic.DangerousAttacks = entities.Sum(x => x.Statistic.DangerousAttacks);
 
             return vm;
         }
@@ -338,7 +368,7 @@ namespace App.Service
             if (entity is null)
                 return vm;
 
-            vm.Id = vm.Id;
+            vm.Id = entity.Id;
             vm.BallPossession = entity.BallPossession;
             vm.GoalAttempts = entity.GoalAttempts;
             vm.ShotsOnGoal = entity.ShotsOnGoal;
@@ -416,7 +446,7 @@ namespace App.Service
             vm.Image = entity.Image;
             vm.Name = entity.Name;
             vm.ColorTheme = entity.ColorTheme;
-            vm.SecondColorTheme= entity.SecondColorTheme;
+            vm.SecondColorTheme = entity.SecondColorTheme;
             vm.Created = entity.Created;
             vm.Updated = entity.Updated;
 
@@ -567,7 +597,6 @@ namespace App.Service
                 return entity;
 
             entity.Id = vm.Id;
-            //entity.Half = (SoccerTimers)vm.Half;
             Enum.TryParse(vm.Half, out SoccerTimers half);
             entity.Half = half;
             entity.EventId = vm.EventId;

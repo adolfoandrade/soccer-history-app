@@ -1,5 +1,4 @@
-﻿using App.Domain.Models;
-using App.Service.ViewModels.SoccerTeam;
+﻿using App.Service.ViewModels.SoccerTeam;
 
 namespace App.Service.ViewModels.SoccerEvent
 {

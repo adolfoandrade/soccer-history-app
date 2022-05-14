@@ -1,6 +1,4 @@
-﻿using App.Models;
-
-namespace App.Domain.Models
+﻿namespace App.Domain.Models
 {
     public class SoccerTeamEventGol
     {

@@ -35,7 +35,7 @@ namespace App.Infra.Data.Repository
                                    ,@Updated)";
                 try
                 {
-                   return await connection.ExecuteAsync(query, soccerTeam);
+                    return await connection.ExecuteAsync(query, soccerTeam);
                 }
                 catch (Exception ex)
                 {

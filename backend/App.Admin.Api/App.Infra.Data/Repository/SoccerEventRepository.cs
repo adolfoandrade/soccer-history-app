@@ -88,7 +88,8 @@ namespace App.Infra.Data.Repository
                                         WHERE ET.EventId = @Id";
                 try
                 {
-                    var @event = await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
+                    var @event = await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
+                    {
                         soccerEvent.Match = match;
                         soccerEvent.Home = homeTeam;
                         soccerEvent.Out = outTeam;
@@ -97,25 +98,28 @@ namespace App.Infra.Data.Repository
 
                     var soccerEvent = @event.FirstOrDefault();
 
-                    var goals = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventGol, SoccerTeam, EventTimeStatistic>(queryGoals, (eventTime, goal, soccerTeam) => {
+                    var goals = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventGol, SoccerTeam, EventTimeStatistic>(queryGoals, (eventTime, goal, soccerTeam) =>
+                    {
                         eventTime.Goal = goal;
                         eventTime.SoccerTeam = soccerTeam;
                         return eventTime;
                     }, new { Id = id }, splitOn: "Id");
 
-                    var cards = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventCard, SoccerTeam, EventTimeStatistic>(queryCards, (eventTime, card, soccerTeam) => {
+                    var cards = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventCard, SoccerTeam, EventTimeStatistic>(queryCards, (eventTime, card, soccerTeam) =>
+                    {
                         eventTime.Card = card;
                         eventTime.SoccerTeam = soccerTeam;
                         return eventTime;
                     }, new { Id = id }, splitOn: "Id");
 
-                    var statistics = await connection.QueryAsync<EventTimeStatistic, Statistic, SoccerTeam, EventTimeStatistic>(queryStatistics, (eventTime, statistic, soccerTeam) => {
+                    var statistics = await connection.QueryAsync<EventTimeStatistic, Statistic, SoccerTeam, EventTimeStatistic>(queryStatistics, (eventTime, statistic, soccerTeam) =>
+                    {
                         eventTime.Statistic = statistic;
                         eventTime.SoccerTeam = soccerTeam;
                         return eventTime;
                     }, new { Id = id }, splitOn: "Id");
 
-                    if(soccerEvent != null)
+                    if (soccerEvent != null)
                     {
                         soccerEvent.EventTimeStatistics = new List<EventTimeStatistic>();
                         soccerEvent.EventTimeStatistics.AddRange(goals);
@@ -143,7 +147,8 @@ namespace App.Infra.Data.Repository
                             LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId";
                 try
                 {
-                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
+                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
+                    {
                         soccerEvent.Match = match;
                         soccerEvent.Home = homeTeam;
                         soccerEvent.Out = outTeam;
@@ -161,7 +166,7 @@ namespace App.Infra.Data.Repository
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var query = $@"SELECT *
+                var query = @"SELECT *
                             FROM Events AS E
                             LEFT JOIN Matches AS M ON M.Id  = E.MatchId
                             LEFT JOIN SoccerTeams H ON H.Id = E.HomeTeamId
@@ -169,7 +174,8 @@ namespace App.Infra.Data.Repository
                             WHERE M.CompetitionId = @SeasonId";
                 try
                 {
-                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
+                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
+                    {
                         soccerEvent.Match = match;
                         soccerEvent.Home = homeTeam;
                         soccerEvent.Out = outTeam;
@@ -194,7 +200,8 @@ namespace App.Infra.Data.Repository
                             LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId";
                 try
                 {
-                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) => {
+                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
+                    {
                         soccerEvent.Match = match;
                         soccerEvent.Home = homeTeam;
                         soccerEvent.Out = outTeam;
