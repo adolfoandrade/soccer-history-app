@@ -162,7 +162,7 @@ namespace App.Service
             vm.Half = "FULL";
             vm.SoccerTeam = team.ToVM();
             vm.Statistic = new StatisticVM();
-            vm.Statistic.BallPossession = entities.Sum(x => x.Statistic.BallPossession);
+            vm.Statistic.BallPossession = entities.Sum(x => x.Statistic.BallPossession) / 2;
             vm.Statistic.GoalAttempts = entities.Sum(x => x.Statistic.GoalAttempts);
             vm.Statistic.ShotsOnGoal = entities.Sum(x => x.Statistic.ShotsOnGoal);
             vm.Statistic.ShotsOffGoal = entities.Sum(x => x.Statistic.ShotsOffGoal);

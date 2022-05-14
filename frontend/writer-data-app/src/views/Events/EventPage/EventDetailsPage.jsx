@@ -18,7 +18,7 @@ import TimeLineGoalComponent    from "../../../components/events/TimeLineGoalCom
 import TimeLineCardComponent    from "../../../components/events/TimeLineCardComponent";
 import AddGoalComponent         from "../../../components/events/AddGoalComponent";
 import AddCardComponent         from "../../../components/events/AddCardComponent";
-import StatistcDetailsComponent from "../../../components/events/StatisticDetailsComponent";
+import StatisticDetailsComponent from "../../../components/events/StatisticDetailsComponent";
 
 function EventDetailsPage() {
   const StyledFabAddGoal = styled(Fab)({
@@ -59,6 +59,8 @@ function EventDetailsPage() {
   const { id } = useParams();
 
   const [soccerEvent, setSoccerEvent] = useState({});
+  const [statistics, setStatistic] = useState([]);
+
   const [openGoal, setOpenGoal] = React.useState(false);
   const [openCard, setOpenCard] = React.useState(false);
 
@@ -71,7 +73,10 @@ function EventDetailsPage() {
     function getEvents() {
       fetch(`https://soccer-app-api.azurewebsites.net/api/Events/${id}`)
         .then((response) => response.json())
-        .then((data) => setSoccerEvent(data));
+        .then((data) => {
+          setSoccerEvent(data);
+          setStatistic(data.statistics);
+        });
     }
     getEvents();
   }, [id]);
@@ -124,7 +129,28 @@ function EventDetailsPage() {
         </div>
       </Container>
       <Container>
-        <StatistcDetailsComponent item={soccerEvent} />
+        <StatisticDetailsComponent item={{ 
+          theEvent: soccerEvent, 
+          homeFullStatistic: statistics?.filter(x => x.half === "FULL").find(x => x.soccerTeam.id === soccerEvent.home.id), 
+          awayFullStatistic: statistics?.filter(x => x.half === "FULL").find(x => x.soccerTeam.id === soccerEvent.out.id),
+          title: "TEAM STATS"
+          }} />
+      </Container>
+      <Container>
+        <StatisticDetailsComponent item={{ 
+          theEvent: soccerEvent, 
+          homeFullStatistic: statistics?.filter(x => x.half === "FIRST_HALF").find(x => x.soccerTeam.id === soccerEvent.home.id), 
+          awayFullStatistic: statistics?.filter(x => x.half === "FIRST_HALF").find(x => x.soccerTeam.id === soccerEvent.out.id),
+          title: "1 HALF TEAM STATS"
+          }} />
+      </Container>
+      <Container>
+        <StatisticDetailsComponent item={{ 
+          theEvent: soccerEvent, 
+          homeFullStatistic: statistics?.filter(x => x.half === "SECOND_HALF").find(x => x.soccerTeam.id === soccerEvent.home.id), 
+          awayFullStatistic: statistics?.filter(x => x.half === "SECOND_HALF").find(x => x.soccerTeam.id === soccerEvent.out.id),
+          title: "2 HALF TEAM STATS"
+          }} />
       </Container>
       <Container style={{ marginBottom: "300px" }} key="game-time-line">
         {soccerEvent?.timeLine?.map((item) => (
@@ -134,20 +160,20 @@ function EventDetailsPage() {
             <TimeLineGoalComponent item={item} />
         ))}
       </Container>
-      <AppBar position="fixed" color="primary" sx={{ top: "auto", bottom: 0 }}>
+      <AppBar position="fixed" color="primary" sx={{ top: "auto", bottom: 0, background: '#212121' }}>
         <Toolbar>
           <IconButton color="inherit" aria-label="open drawer">
             <MenuIcon />
           </IconButton>
           <StyledFabAddGoal
-            color="secondary"
+            color="#616161"
             aria-label="add"
             onClick={handleOpenGoal}
           >
             <SportsSoccerIcon />
           </StyledFabAddGoal>
           <StyledFabAddCard
-            color="secondary"
+            color="#616161"
             aria-label="add"
             onClick={handleOpenCard}
           >
@@ -157,7 +183,7 @@ function EventDetailsPage() {
             to={`/statistic/common/add/${id}`}
           >
             <StyledFabAddStatistic
-              color="secondary"
+              color="#616161"
               aria-label="add"
 
             >
