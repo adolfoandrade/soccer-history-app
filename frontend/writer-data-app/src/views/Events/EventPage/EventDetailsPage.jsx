@@ -118,7 +118,11 @@ function EventDetailsPage() {
             <div style={{ margin: "0 auto", fontWeight: "600" }}>
               {soccerEvent?.home?.goals}
             </div>
-            <div style={{ margin: "0 auto", color: "#757575" }}>x</div>
+            <div style={{ margin: "0 auto", color: "#757575", textAlign: "center" }}>
+              <p style={{ fontSize: "12px", padding: "0", margin: "0", fontWeight: 500 }}>{soccerEvent.date}</p>
+              <p style={{ padding: "0", margin: "0", textAlign: "center" }}>x</p>
+              <p style={{ fontSize: "12px", padding: "0", margin: "0", fontWeight: 500 }}>ROUND 2</p>
+            </div>
             <div style={{ margin: "0 auto", fontWeight: "600" }}>
               {soccerEvent?.out?.goals}
             </div>
