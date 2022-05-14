@@ -134,17 +134,21 @@ namespace App.Service
             vm.Venue = entity.Venue;
             vm.Home = entity.Home.ToSoccerTeamEventVM();
             vm.Out = entity.Out.ToSoccerTeamEventVM();
+
             var goals = entity.EventTimeStatistics.Where(x => x.Goal != null && x.Goal.Id > 0).ToEventGoalVM().ToTimeLineVM();
             var cards = entity.EventTimeStatistics.Where(x => x.Card != null && x.Card.Id > 0).ToEventCardVM().ToTimeLineVM();
             vm.TimeLine = new List<EventTimeLineVM>();
             vm.TimeLine.AddRange(goals);
             vm.TimeLine.AddRange(cards);
             vm.TimeLine = vm.TimeLine.OrderByDescending(x => x.Item.Minute).ToList();
+            vm.Home.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
+            vm.Out.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
+
             vm.Statistics = entity.EventTimeStatistics.Where(x => x.Statistic != null && x.Statistic.Id > 0).ToEventStatisticVM();
             var fullStatisticHomeTeam = vm.Statistics.GetFullStatistic(entity.Home);
             var fullStatisticAwayTeam = vm.Statistics.GetFullStatistic(entity.Out);
-            vm.Home.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
-            vm.Out.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
+            vm.Statistics.Add(fullStatisticHomeTeam);
+            vm.Statistics.Add(fullStatisticAwayTeam);       
 
             return vm;
         }
