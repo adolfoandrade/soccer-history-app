@@ -7,6 +7,7 @@ namespace App.Service.ViewModels.SoccerEvent
     {
         public int Id { get; set; }
         public int MatchId { get; set; }
+        public MatchVM Match { get; set; }
         public DateTime Date { get; set; }
         public SoccerTeamEventVM Home { get; set; }
         public int HomeTeamId { get; set; }

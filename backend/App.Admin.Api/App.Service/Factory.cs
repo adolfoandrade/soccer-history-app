@@ -127,6 +127,7 @@ namespace App.Service
 
             vm.Id = entity.Id;
             vm.MatchId = entity.MatchId;
+            vm.Match = entity.Match.ToVM();
             vm.Date = entity.Date;
             vm.HomeTeamId = entity.HomeTeamId;
             vm.OutTeamId = entity.OutTeamId;
