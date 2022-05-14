@@ -3,9 +3,6 @@ using App.Domain.Interfaces;
 using App.Service.Interfaces;
 using App.Service.ViewModels.Statistic;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Service
@@ -28,7 +25,7 @@ namespace App.Service
             {
                 var entity = vm.ToEntity();
                 var eventTime = await _eventTimeStatisticRepository.GetAsync(vm.EventId, (int)entity.EventTimeStatistic.Half, vm.SoccerTeamId);
-                if(eventTime is null)
+                if (eventTime is null)
                 {
                     entity.EventTimeStatisticId = await _eventTimeStatisticRepository.AddAsync(entity.EventTimeStatistic);
                 }
@@ -48,6 +45,6 @@ namespace App.Service
             }
         }
 
-       
+
     }
 }

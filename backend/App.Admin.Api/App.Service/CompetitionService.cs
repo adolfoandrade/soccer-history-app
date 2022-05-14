@@ -1,6 +1,5 @@
 ﻿using App.Domain.Exceptions.Competition;
 using App.Domain.Interfaces;
-using App.Service;
 using App.Service.Interfaces;
 using App.Service.ViewModels;
 using System;

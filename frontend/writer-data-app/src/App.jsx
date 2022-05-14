@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import TeamPage from "./views/Teams/TeamPage/TeamPage";
 import EventPage from "./views/Events/EventPage/EventPage";

@@ -1,6 +1,4 @@
-﻿using App.Service.ViewModels.SoccerTeam;
-
-namespace App.Service.ViewModels.SoccerEvent
+﻿namespace App.Service.ViewModels.SoccerEvent
 {
     public class StatisticVM
     {

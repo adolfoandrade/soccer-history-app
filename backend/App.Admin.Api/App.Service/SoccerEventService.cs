@@ -32,7 +32,7 @@ namespace App.Service
             try
             {
                 var match = await _matchRepository.GetByMatchNumerAsync(vm.MatchNumber, vm.CompetitionId);
-                if(match is null)
+                if (match is null)
                 {
                     match = new Match { CompetitionId = vm.CompetitionId, Number = vm.MatchNumber };
                     await _matchRepository.AddAsync(match);

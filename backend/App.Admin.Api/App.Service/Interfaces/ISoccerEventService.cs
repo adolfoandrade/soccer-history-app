@@ -1,7 +1,5 @@
-﻿using App.Models;
-using App.Service.ViewModels;
+﻿using App.Service.ViewModels;
 using App.Service.ViewModels.SoccerEvent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace App.Service.Interfaces

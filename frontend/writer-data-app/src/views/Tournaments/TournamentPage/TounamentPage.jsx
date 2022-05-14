@@ -1,29 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
 import Fab from '@mui/material/Fab';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import Avatar from '@mui/material/Avatar';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreIcon from '@mui/icons-material/MoreVert';
-
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 
 const StyledFab = styled(Fab)({
   position: 'absolute',
@@ -46,10 +31,10 @@ function TournamentPage() {
 
   return (
     <>
-      <Container maxWidth="sm">
+      <Container maxWidth="lg">
         <ul style={{ listStyleType: 'none' }}>
           {competitions.map((item) => (
-            <li key={item.image} style={{ margin: "0 auto", display: "inline-block", padding: "20px" }}>
+            <li key={item.image} style={{ margin: "0 auto", display: "inline-block", padding: "20px", textAlign: "center" }}>
                 <Link to={`/events/${item.id}`}>
                 <img style={{  }}
                     src={`${item.image}?w=248&fit=crop&auto=format`}
@@ -57,6 +42,7 @@ function TournamentPage() {
                     alt={item.title}
                     loading="lazy"
                 />
+                <p>{item.name}</p>
                 </Link>
             </li>
           ))}

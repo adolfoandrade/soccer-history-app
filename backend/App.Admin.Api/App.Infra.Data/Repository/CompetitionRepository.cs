@@ -44,7 +44,7 @@ namespace App.Infra.Data.Repository
 
                     throw new AddCompetitionException(ex.Message, ex);
                 }
-                
+
             }
             return competition;
         }
