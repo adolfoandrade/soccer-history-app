@@ -140,7 +140,7 @@ namespace App.Service
                         Events = seasonEvents.Where(x => x.MatchId == match.Id).ToVM()
                     });
                 }
-                vm.Matches = @events;
+                vm.Matches = @events.OrderByDescending(x => x.Match.Number).ToList();
                 return vm;
             }
             catch (QueryBySeasonSoccerEventException ex)
