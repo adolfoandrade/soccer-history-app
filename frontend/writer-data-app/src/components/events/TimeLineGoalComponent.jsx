@@ -24,10 +24,12 @@ function TimeLineGoalComponent(props) {
           <div style={{
             width: "120px",
             margin: "0 auto",
+            color: "#f5f5f5"
           }}>GOOOAAALLL!!!</div>
           <div style={{
             width: "20px",
             margin: "0 auto",
+            color: "#f5f5f5"
           }}>{props.item?.item?.minute}'</div>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>

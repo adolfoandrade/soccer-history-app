@@ -119,9 +119,9 @@ function EventDetailsPage() {
               {soccerEvent?.home?.goals}
             </div>
             <div style={{ margin: "0 auto", color: "#757575", textAlign: "center" }}>
-              <p style={{ fontSize: "12px", padding: "0", margin: "0", fontWeight: 500 }}>{soccerEvent.date}</p>
+              <p style={{ fontSize: "12px", padding: "0", margin: "0", fontWeight: 500 }}>{soccerEvent?.date}</p>
               <p style={{ padding: "0", margin: "0", textAlign: "center" }}>x</p>
-              <p style={{ fontSize: "12px", padding: "0", margin: "0", fontWeight: 500 }}>ROUND 2</p>
+              <p style={{ fontSize: "12px", padding: "0", margin: "0", fontWeight: 500 }}>ROUND {soccerEvent?.match?.number}</p>
             </div>
             <div style={{ margin: "0 auto", fontWeight: "600" }}>
               {soccerEvent?.out?.goals}
@@ -133,28 +133,28 @@ function EventDetailsPage() {
         </div>
       </Container>
       <Container>
-        <StatisticDetailsComponent item={{ 
+      {statistics.length > 2 && <StatisticDetailsComponent item={{ 
           theEvent: soccerEvent, 
-          homeFullStatistic: statistics?.filter(x => x.half === "FULL").find(x => x.soccerTeam.id === soccerEvent.home.id), 
-          awayFullStatistic: statistics?.filter(x => x.half === "FULL").find(x => x.soccerTeam.id === soccerEvent.out.id),
+          homeFullStatistic: statistics?.filter(x => x.half === "FULL")?.find(x => x.soccerTeam.id === soccerEvent.home.id), 
+          awayFullStatistic: statistics?.filter(x => x.half === "FULL")?.find(x => x.soccerTeam.id === soccerEvent.out.id),
           title: "TEAM STATS"
-          }} />
+          }} />}
       </Container>
       <Container>
-        <StatisticDetailsComponent item={{ 
+      {statistics.length > 2 && <StatisticDetailsComponent item={{ 
           theEvent: soccerEvent, 
-          homeFullStatistic: statistics?.filter(x => x.half === "FIRST_HALF").find(x => x.soccerTeam.id === soccerEvent.home.id), 
-          awayFullStatistic: statistics?.filter(x => x.half === "FIRST_HALF").find(x => x.soccerTeam.id === soccerEvent.out.id),
-          title: "1 HALF TEAM STATS"
-          }} />
+          homeFullStatistic: statistics?.filter(x => x.half === "FIRST_HALF")?.find(x => x.soccerTeam.id === soccerEvent.home.id), 
+          awayFullStatistic: statistics?.filter(x => x.half === "FIRST_HALF")?.find(x => x.soccerTeam.id === soccerEvent.out.id),
+          title: "1ST HALF TEAM STATS"
+          }} />}
       </Container>
       <Container>
-        <StatisticDetailsComponent item={{ 
+      {statistics.length > 2 && <StatisticDetailsComponent item={{ 
           theEvent: soccerEvent, 
-          homeFullStatistic: statistics?.filter(x => x.half === "SECOND_HALF").find(x => x.soccerTeam.id === soccerEvent.home.id), 
-          awayFullStatistic: statistics?.filter(x => x.half === "SECOND_HALF").find(x => x.soccerTeam.id === soccerEvent.out.id),
-          title: "2 HALF TEAM STATS"
-          }} />
+          homeFullStatistic: statistics?.filter(x => x.half === "SECOND_HALF")?.find(x => x.soccerTeam.id === soccerEvent.home.id), 
+          awayFullStatistic: statistics?.filter(x => x.half === "SECOND_HALF")?.find(x => x.soccerTeam.id === soccerEvent.out.id),
+          title: "2ND HALF TEAM STATS"
+          }} />}
       </Container>
       <Container style={{ marginBottom: "300px" }} key="game-time-line">
         {soccerEvent?.timeLine?.map((item) => (
