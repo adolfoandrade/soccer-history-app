@@ -37,7 +37,7 @@ function EventForm() {
         }}
         onSubmit={async (values) => {
           console.log(values);
-          fetch('https://localhost:5001/api/Events', {
+          fetch('https://soccer-app-api.azurewebsites.net/api/Events', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<TournamentPage></TournamentPage>}></Route>
         <Route path="/events/:id" element={<EventPage></EventPage>}></Route>
-        <Route path="/add" element={<EventForm></EventForm>}></Route>
+        <Route path="/events/add" element={<EventForm></EventForm>}></Route>
         <Route path="/details/:id" element={<EventDetailsPage></EventDetailsPage>}></Route>
         <Route path="/statistic/common/add/:id" element={<AddCommonStatisticComponent></AddCommonStatisticComponent>}></Route>
         <Route path="/soccer/team" element={<TeamPage></TeamPage>}></Route>

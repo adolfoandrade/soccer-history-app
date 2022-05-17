@@ -60,7 +60,7 @@ function EventPage() {
           <IconButton color="inherit" aria-label="open drawer">
             <MenuIcon />
           </IconButton>
-          <StyledFab component={Link} to="/soccer/team/form/0" color="secondary" aria-label="add">
+          <StyledFab component={Link} to="/events/add" color="secondary" aria-label="add">
             <AddIcon />
           </StyledFab>
           <Box sx={{ flexGrow: 1 }} />

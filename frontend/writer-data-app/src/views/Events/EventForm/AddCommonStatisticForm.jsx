@@ -50,7 +50,7 @@ function AddCommonStatisticComponent(props) {
                     }}
                     onSubmit={async (values) => {
                         console.log(values);
-                        fetch("https://localhost:5001/api/Statistics/common", {
+                        fetch("https://soccer-app-api.azurewebsites.net/api/Statistics/common", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
