@@ -115,6 +115,9 @@ namespace App.Service
             vm.Venue = entity.Venue;
             vm.Home = entity.Home.ToSoccerTeamEventVM();
             vm.Out = entity.Out.ToSoccerTeamEventVM();
+            var goals = entity.EventTimeStatistics.Where(x => x.Goal != null && x.Goal.Id > 0);
+            vm.Home.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Home.Id);
+            vm.Out.Goals = goals.Count(x => x.SoccerTeam.Id == vm.Out.Id);
 
             return vm;
         }
