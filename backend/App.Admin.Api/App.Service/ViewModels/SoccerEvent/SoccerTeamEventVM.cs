@@ -9,5 +9,6 @@
         public string ColorTheme { get; set; }
         public string SecondColorTheme { get; set; }
         public int Goals { get; set; }
+        public int GoalsFirstHalf { get; set; }
     }
 }
