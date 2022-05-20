@@ -34,7 +34,7 @@ function EventListItemComponent(props) {
                             <div style={{ alignItems: "center", display: "flex" }}>
                                 <img style={{ marginRight: "6px" }} alt="" src={`${theEvent.home.image}`} width="32" />{theEvent.home.name}
                             </div>
-                            <div>0 (0)</div>
+                            <div>{ theEvent.home.goals } ({ theEvent.home.goalsFirstHalf })</div>
                         </div>
                         <div style={{ 
                             borderBottomLeftRadius: "12px", 
@@ -53,7 +53,7 @@ function EventListItemComponent(props) {
                             <div style={{ alignItems: "center", display: "flex" }}>
                                 <img style={{ marginRight: "6px" }} alt="" src={`${theEvent.out.image}`} width="32" />{theEvent.out.name}
                             </div>
-                            <div>0 (0)</div>
+                            <div>{ theEvent.out.goals } ({ theEvent.out.goalsFirstHalf })</div>
                         </div>
                     </Link>
                 </>

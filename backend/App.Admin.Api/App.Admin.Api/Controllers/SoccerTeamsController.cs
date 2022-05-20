@@ -111,7 +111,7 @@ namespace App.Admin.Api.Controllers
         [HttpPost(nameof(UploadFile))]
         public async Task<IActionResult> UploadFile(IFormFile files)
         {
-            var blobstorageconnection = Environment.GetEnvironmentVariable("SOCCER_APP_AZURE_BLOB_STORAGE", EnvironmentVariableTarget.Machine);
+            var blobstorageconnection = Environment.GetEnvironmentVariable("SOCCER_APP_AZURE_BLOB_STORAGE");
             string systemFileName = files.FileName;
             string baseUrl = $"https://soccer.blob.core.windows.net/teams/{systemFileName}";
             // Retrieve storage account from connection string.    

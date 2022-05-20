@@ -91,6 +91,8 @@ namespace App.Infra.Data.Repository
                                   ,[Name]
                                   ,[Country]
                                   ,[Image]
+                                  ,[ColorTheme]
+                                  ,[SecondColorTheme]
                                   ,[Created]
                                   ,[Updated]
                               FROM [dbo].[SoccerTeams]

@@ -1,30 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import { useParams } from "react-router-dom";
-import { TextField, Stack, Autocomplete, Box, Container } from "@mui/material";
+import { TextField, Stack, Box, Container } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import { Link } from "react-router-dom";
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
 import Fab from '@mui/material/Fab';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import Avatar from '@mui/material/Avatar';
 import MenuIcon from '@mui/icons-material/Menu';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Button from '@mui/material/Button';
 
 const Input = styled('input')({
@@ -77,7 +64,9 @@ function TeamForm() {
           initialValues={{
             image: soccerImage,
             name: "",
-            country: ""
+            country: "",
+            colorTheme: "",
+            secondColorTheme: ""
           }}
           onSubmit={async (values) => {
             //alert(JSON.stringify(values, null, 2));
@@ -120,9 +109,9 @@ function TeamForm() {
                   id="name"
                   label="Name"
                   variant="outlined"
-                  onChange={(e, value) => { 
-                    setFieldValue("name", e.target.value) 
-                    setFieldValue("image", soccerImage) 
+                  onChange={(e, value) => {
+                    setFieldValue("name", e.target.value)
+                    setFieldValue("image", soccerImage)
                   }}
                 />
 
@@ -131,6 +120,20 @@ function TeamForm() {
                   label="Country"
                   variant="outlined"
                   onChange={(e, value) => setFieldValue("country", e.target.value)}
+                />
+
+                <TextField
+                  id="colorTheme"
+                  label="Color Theme"
+                  variant="outlined"
+                  onChange={(e, value) => setFieldValue("colorTheme", e.target.value)}
+                />
+
+                <TextField
+                  id="secondColorTheme"
+                  label="Second Color Theme"
+                  variant="outlined"
+                  onChange={(e, value) => setFieldValue("secondColorTheme", e.target.value)}
                 />
 
                 <LoadingButton
