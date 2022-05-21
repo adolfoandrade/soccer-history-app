@@ -70,7 +70,7 @@ namespace App.Infra.Data.Repository
             {
                 var query = $@"SELECT *
                             FROM Events AS E
-                            LEFT JOIN Matches AS M ON M.Id = E.Id
+                            LEFT JOIN Matches AS M ON M.Id = E.MatchId
                             LEFT JOIN SoccerTeams H ON H.Id = E.HomeTeamId
                             LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId
                             WHERE E.Id = @Id";
@@ -172,15 +172,39 @@ namespace App.Infra.Data.Repository
                             LEFT JOIN SoccerTeams H ON H.Id = E.HomeTeamId
                             LEFT JOIN SoccerTeams O ON O.Id = E.OutTeamId
                             WHERE M.CompetitionId = @SeasonId";
+
+                var queryGoals = $@"SELECT * FROM EventTimeStatistics AS ET
+                                    INNER JOIN GoalsStatistics AS G ON G.EventTimeStatisticId = ET.Id
+                                    INNER JOIN SoccerTeams AS ST ON ST.Id = ET.SoccerTeamId
+                                    WHERE ET.EventId IN @Ids";
+
                 try
                 {
-                    return await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
+                    var @events = await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
                     {
                         soccerEvent.Match = match;
                         soccerEvent.Home = homeTeam;
                         soccerEvent.Out = outTeam;
                         return soccerEvent;
                     }, new { SeasonId = seasonId }, splitOn: "Id");
+
+                    var ids = @events.Select(x => x.Id).ToArray();
+                    var goals = await connection.QueryAsync<EventTimeStatistic, SoccerTeamEventGol, SoccerTeam, EventTimeStatistic>(queryGoals, (eventTime, goal, soccerTeam) =>
+                    {
+                        eventTime.Goal = goal;
+                        eventTime.SoccerTeam = soccerTeam;
+                        return eventTime;
+                    }, new { Ids = ids }, splitOn: "Id");
+
+                    var theSoccerEvents = new List<SoccerEvent>();
+                    foreach (var item in @events)
+                    {
+                        item.EventTimeStatistics = new List<EventTimeStatistic>();
+                        item.EventTimeStatistics.AddRange(goals.Where(x => x.EventId == item.Id));
+                        theSoccerEvents.Add(item);
+                    }
+
+                    return theSoccerEvents;
                 }
                 catch (Exception ex)
                 {
