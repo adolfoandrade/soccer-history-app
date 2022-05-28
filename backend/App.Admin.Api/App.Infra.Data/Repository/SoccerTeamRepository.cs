@@ -26,13 +26,17 @@ namespace App.Infra.Data.Repository
                                    ,[Country]
                                    ,[Image]
                                    ,[Created]
-                                   ,[Updated])
+                                   ,[Updated]
+                                   ,[ColorTheme]
+                                   ,[SecondColorTheme])
                              VALUES
                                    (@Name
                                    ,@Country
                                    ,@Image
                                    ,@Created
-                                   ,@Updated)";
+                                   ,@Updated
+                                   ,@ColorTheme
+                                   ,@SecondColorTheme)";
                 try
                 {
                     return await connection.ExecuteAsync(query, soccerTeam);
@@ -70,6 +74,8 @@ namespace App.Infra.Data.Repository
                                   ,[Image]
                                   ,[Created]
                                   ,[Updated]
+                                  ,[ColorTheme]
+                                  ,[SecondColorTheme]
                               FROM [dbo].[SoccerTeams]
                               WHERE [Name] LIKE '%{filter}%'";
                 try
@@ -95,6 +101,8 @@ namespace App.Infra.Data.Repository
                                   ,[SecondColorTheme]
                                   ,[Created]
                                   ,[Updated]
+                                  ,[ColorTheme]
+                                  ,[SecondColorTheme]
                               FROM [dbo].[SoccerTeams]
                               WHERE [Id] = @Id";
                 try
@@ -118,6 +126,8 @@ namespace App.Infra.Data.Repository
                                   ,[Image]
                                   ,[Created]
                                   ,[Updated]
+                                  ,[ColorTheme]
+                                  ,[SecondColorTheme]
                               FROM [dbo].[SoccerTeams]";
                 try
                 {
@@ -139,6 +149,8 @@ namespace App.Infra.Data.Repository
                                   ,[Country] = @Country
                                   ,[Image] = @Image
                                   ,[Updated] = @Updated
+                                  ,[ColorTheme] = @ColorTheme
+                                  ,[SecondColorTheme] = @SecondColorTheme
                              WHERE [Id] = @Id";
                 try
                 {

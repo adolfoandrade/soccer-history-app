@@ -4,6 +4,7 @@ using App.Service.Interfaces;
 using App.Service.ViewModels.SoccerTeam;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Service
@@ -63,7 +64,7 @@ namespace App.Service
             try
             {
                 var result = await _repository.GetAsync();
-                return result.ToVM();
+                return result.OrderByDescending(x => x.Created).ToVM();
             }
             catch (QuerySoccerTeamException ex)
             {
