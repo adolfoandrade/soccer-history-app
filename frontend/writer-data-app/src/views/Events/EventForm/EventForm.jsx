@@ -8,8 +8,6 @@ function EventForm() {
   const [loading, setLoading] = React.useState(false);
 
   const [soccerTeams, setSoccerTeams] = useState([]);
-  const [homeTeam, setHomeTeam] = useState();
-  const [outTeam, setOutTeam] = useState();
 
   const [competitions, setCompetitions] = useState([]);
 
@@ -136,7 +134,7 @@ function EventForm() {
                 id="datetime-event"
                 label="Event date"
                 type="datetime-local"
-                defaultValue="2022-01-01T10:30"
+                defaultValue="2022-04-01T10:30"
                 onChange={(e, value) => setFieldValue("date", e.target.value)}
                 sx={{ width: "100%" }}
                 InputLabelProps={{
