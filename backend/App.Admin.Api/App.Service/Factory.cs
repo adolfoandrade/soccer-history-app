@@ -34,7 +34,6 @@ namespace App.Service
             vm.Name = competition.Name;
             vm.Country = competition.Country;
             vm.Image = competition.Image;
-            vm.Year = competition.Year;
 
             return vm;
         }
@@ -49,7 +48,6 @@ namespace App.Service
             entity.Name = vm.Name;
             entity.Country = vm.Country;
             entity.Image = vm.Image;
-            entity.Year = vm.Year;
             entity.Created = DateTime.Now;
             entity.Updated = DateTime.Now;
 

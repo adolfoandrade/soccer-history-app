@@ -17,7 +17,7 @@ namespace App.Infra.Data.Repository
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<Competition> AddAsync(Competition competition)
+        public async Task<int> AddAsync(Competition competition)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -25,28 +25,32 @@ namespace App.Infra.Data.Repository
                                 ([Name]
                                 ,[Country]
                                 ,[Image]
-                                ,[Year]
                                 ,[Created]
                                 ,[Updated])
+                            OUTPUT INSERTED.Id
                             VALUES
                                 (@Name
                                 ,@Country
                                 ,@Image
-                                ,@Year
                                 ,@Created
                                 ,@Updated)";
                 try
                 {
-                    await connection.ExecuteAsync(query, competition);
+                    return await connection.QueryFirstAsync<int>(query, new
+                    {
+                        Name = competition.Name,
+                        Country = competition.Country,
+                        Image = competition.Image,
+                        Created = competition.Created,
+                        Updated = competition.Updated,
+                    });
                 }
                 catch (Exception ex)
                 {
-
                     throw new AddCompetitionException(ex.Message, ex);
                 }
 
             }
-            return competition;
         }
 
         public async Task<int> DeleteAsync(int id)

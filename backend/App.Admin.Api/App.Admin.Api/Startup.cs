@@ -1,15 +1,24 @@
 using app.api.Infrastructure;
 using App.Domain.Interfaces;
+using App.EventBus;
+using App.EventBus.EventBusRabbitMQ;
+using App.EventBus.IntegrationEvents.EventHandling;
+using App.EventBus.IntegrationEvents.Services;
 using App.Infra.Data;
 using App.Infra.Data.Repository;
 using App.Service;
 using App.Service.Interfaces;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
+using System;
 
 namespace App.Admin.Api
 {
@@ -22,7 +31,6 @@ namespace App.Admin.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
@@ -50,6 +58,10 @@ namespace App.Admin.Api
 
             services.AddScoped<IEventTimeStatisticRepository, EventTimeStatisticRepository>();
 
+            services.AddScoped<ICompetitionIntegrationEventService, CompetitionIntegrationEventService>();
+
+            services.AddScoped<IApiValueReferenceRepository, ApiValueReferenceRepository>();
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -72,9 +84,21 @@ namespace App.Admin.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "App.Admin.Api", Version = "v1" });
             });
+
+            services.AddIntegrationServices(Configuration)
+                    .AddEventBus(Configuration);
+
+            var container = new ContainerBuilder();
+            container.Populate(services);
+            container.Build();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        protected virtual void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<CompetitionIntegrationEvent, CompetitionIntegrationEventHandler>();
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -97,6 +121,73 @@ namespace App.Admin.Api
             {
                 endpoints.MapControllers();
             });
+
+            ConfigureEventBus(app);
+        }
+
+    }
+
+    public static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+
+                var factory = new ConnectionFactory()
+                {
+                    HostName = configuration["EventBusConnection"],
+                    DispatchConsumersAsync = true
+                };
+
+                if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                {
+                    factory.UserName = configuration["EventBusUserName"];
+                }
+
+                if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                {
+                    factory.Password = configuration["EventBusPassword"];
+                }
+
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                }
+
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            var subscriptionClientName = configuration["SubscriptionClientName"];
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+            {
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+                var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+                var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                }
+
+                return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+            });
+
+            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+            services.AddTransient<CompetitionIntegrationEventHandler>();
+
+            return services;
         }
     }
+
 }
