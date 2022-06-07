@@ -3,6 +3,7 @@ using Autofac.Core;
 using Dapper;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using SyncSoccerData.Clients;
 using SyncSoccerData.EventBus;
 using SyncSoccerData.EventBus.EventBusRabbitMQ;
 using SyncSoccerData.EventBus.IntegrationEvents.EventHandling;
@@ -12,18 +13,13 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SyncSoccerData
 {
     internal class Program
-    {
-        public static string COUNTRIES_URL = "https://api-football-v1.p.rapidapi.com/v3/countries";
-        public static string LEAGUES_URL = "https://api-football-v1.p.rapidapi.com/v3/leagues?country=Brazil";
-        public static string TEAMS_URL = "https://api-football-v1.p.rapidapi.com/v3/teams?league=71&season=2022";
-        public static string FIXTURES_URL = "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=72&season=2022";
-        public static string FIXTURE_EVENTS_URL = "https://api-football-v1.p.rapidapi.com/v3/fixtures/events?fixture=838627";
-
+    {    
         static Program()
         {
 
@@ -31,17 +27,18 @@ namespace SyncSoccerData
 
         static void Main(string[] args)
         {
+            /* Dependecy Injection withutofac configuration */ 
             IContainer container;
             var firstBuilder = new ContainerBuilder();
             var builder = new ContainerBuilder();
             var subscriptionClientName = "SubscriptionClientName";
             var factory = new ConnectionFactory()
             {
-                HostName = "spaceship-rabbitmq.brazilsouth.cloudapp.azure.com", //Configuration["EventBusConnection"],
+                HostName = "spaceship-rabbitmq.brazilsouth.cloudapp.azure.com",
                 DispatchConsumersAsync = true
             };
-            factory.UserName = "app";
-            factory.Password = "";
+            factory.UserName = "soccer";
+            factory.Password = Environment.GetEnvironmentVariable("SOCCER_APP_RABBITMQ_PASSWORD");
             var retryCount = 5;
             firstBuilder.Register(x => new DefaultRabbitMQPersistentConnection(factory, retryCount)).As<IRabbitMQPersistentConnection>();
             firstBuilder.RegisterType<InMemoryEventBusSubscriptionsManager>().As<IEventBusSubscriptionsManager>();
@@ -51,33 +48,34 @@ namespace SyncSoccerData
             var iLifetimeScope = containerAutofac.Resolve<ILifetimeScope>();
             var eventBusSubcriptionsManager = containerAutofac.Resolve<IEventBusSubscriptionsManager>();
             builder.Register(x => new EventBusRabbitMQ(rabbitMQPersistentConnection, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount)).As<IEventBus>();
-
+            builder.RegisterType<ApiFootballBaseClient>().As<IApiFootballBaseClient>();
             container = builder.Build();
 
-            //var countries = GetAsync<CountriesResponseVM>(COUNTRIES_URL).Result;
-            var leagues = GetAsync<ResponseVM<LeaguesResponseVM>>(LEAGUES_URL).Result;
-            var teams = GetAsync<ResponseVM<TeamVenueResponseVM>>(TEAMS_URL).Result;
-            //var fixtures = GetAsync<ResponseVM<FixtureLeagueResponseVM>>(FIXTURES_URL).Result;
-            //var fixtureEvents = GetAsync<ResponseVM<FixtureEventsResponseVM>>(FIXTURE_EVENTS_URL).Result;
 
-            var service = container.Resolve<IEventBus>();
-            service.Publish(new CompetitionIntegrationEvent() { Competitions = JsonConvert.SerializeObject(leagues) });
+            /* Query api and send data */
+            var serviceBus = container.Resolve<IEventBus>();
+            var _client = container.Resolve<IApiFootballBaseClient>();
+            //var countries = new List<string>() { "Brazil", "Colombia", "Chile", "Venezuela", "Argentina", "Uruguay", "Bolivia", "Ecuador" };
+            var countries = new List<string>() { "Brazil" };
 
-            service.Publish(new TeamsIntegrationEvent() { Teams = JsonConvert.SerializeObject(teams) });
+            foreach (var country in countries)
+            {
+                var leagues = _client.GetLeaguesAsync(country).Result;
+                serviceBus.Publish(new CompetitionIntegrationEvent() { Competitions = JsonConvert.SerializeObject(leagues) });
+
+                foreach (var league in leagues.Response)
+                {
+                    var teams = _client.GetTeamsAsync(league.LeagueVM.Id, 2022).Result;
+                    Task.Delay(TimeSpan.FromSeconds(15));
+                    serviceBus.Publish(new TeamsIntegrationEvent() { Teams = JsonConvert.SerializeObject(teams) });
+                }
+
+                Task.Delay(TimeSpan.FromSeconds(60));
+            }
 
             Console.ReadLine();
         }
 
-        static async Task<T> GetAsync<T>(string url)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Add("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com");
-            client.DefaultRequestHeaders.Add("X-RapidAPI-Key", "ea52f2423emsh6d54b6bd79841a1p1f7a4ejsn1922d7f49e50");
-
-            var result = await client.GetStringAsync(url);
-            return JsonConvert.DeserializeObject<T>(result);
-        }
     }
 
 }

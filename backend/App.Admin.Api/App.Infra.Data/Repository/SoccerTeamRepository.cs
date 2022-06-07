@@ -21,7 +21,7 @@ namespace App.Infra.Data.Repository
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var query = @"INSERT INTO [dbo].[SoccerTeams]
+                var query = @"INSERT INTO [dbo].[Teams]
                                    ([Name]
                                    ,[Country]
                                    ,[Image]
@@ -52,7 +52,7 @@ namespace App.Infra.Data.Repository
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var query = @"DELETE FROM [dbo].[SoccerTeams] WHERE Id = @id";
+                var query = @"DELETE FROM [dbo].[Teams] WHERE Id = @id";
                 try
                 {
                     return await connection.ExecuteAsync(query, new { Id = id });
@@ -76,7 +76,7 @@ namespace App.Infra.Data.Repository
                                   ,[Updated]
                                   ,[ColorTheme]
                                   ,[SecondColorTheme]
-                              FROM [dbo].[SoccerTeams]
+                              FROM [dbo].[Teams]
                               WHERE [Name] LIKE '%{filter}%'";
                 try
                 {
@@ -103,7 +103,7 @@ namespace App.Infra.Data.Repository
                                   ,[Updated]
                                   ,[ColorTheme]
                                   ,[SecondColorTheme]
-                              FROM [dbo].[SoccerTeams]
+                              FROM [dbo].[Teams]
                               WHERE [Id] = @Id";
                 try
                 {
@@ -128,7 +128,7 @@ namespace App.Infra.Data.Repository
                                   ,[Updated]
                                   ,[ColorTheme]
                                   ,[SecondColorTheme]
-                              FROM [dbo].[SoccerTeams]";
+                              FROM [dbo].[Teams]";
                 try
                 {
                     return await connection.QueryAsync<SoccerTeam>(query);
@@ -144,7 +144,7 @@ namespace App.Infra.Data.Repository
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var query = @"UPDATE [dbo].[SoccerTeams]
+                var query = @"UPDATE [dbo].[Teams]
                                SET [Name] = @Name
                                   ,[Country] = @Country
                                   ,[Image] = @Image
