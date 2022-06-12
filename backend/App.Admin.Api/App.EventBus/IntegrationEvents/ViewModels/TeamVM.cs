@@ -22,7 +22,7 @@ namespace App.ViewModels
         public string Country { get; set; }     
 
         [JsonProperty("founded")]
-        public int Founded { get; set; }
+        public int? Founded { get; set; }
 
         [JsonProperty("national")]
         public bool National { get; set; }

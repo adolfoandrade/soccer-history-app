@@ -45,6 +45,27 @@ namespace App.Infra.Data.Repository
             }
         }
 
+        public async Task<int> UpdateAsync(ApiValueReference reference)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = @"UPDATE [dbo].[APIValuesReferences]
+                               SET [TableReference] = @TableReference
+                                  ,[ApiName] = @ApiName
+                                  ,[ApiId] = @ApiId
+                                  ,[AppId] = @AppId
+                             WHERE [AppId] = @AppId";
+                try
+                {
+                    return await connection.ExecuteAsync(query, reference);
+                }
+                catch (Exception ex)
+                {
+                    throw new AddApiValueReferenceException(ex.Message, ex);
+                }
+            }
+        }
+
         public async Task<ApiValueReference> GetByApiIdAsync(string table, int apiId)
         {
             using (var connection = _connectionFactory.CreateConnection())
@@ -59,6 +80,28 @@ namespace App.Infra.Data.Repository
                 try
                 {
                     return await connection.QueryFirstOrDefaultAsync<ApiValueReference>(query, new { Table = table, ApiId = apiId });
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryApiValueReferenceException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<ApiValueReference>> GetByTableNameAsync(string table)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT [Id]
+                                  ,[TableReference]
+                                  ,[ApiName]
+                                  ,[ApiId]
+                                  ,[AppId]
+                              FROM [dbo].[APIValuesReferences]
+                              WHERE [TableReference] = @Table";
+                try
+                {
+                    return await connection.QueryAsync<ApiValueReference>(query, new { Table = table });
                 }
                 catch (Exception ex)
                 {

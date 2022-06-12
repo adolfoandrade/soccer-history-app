@@ -5,7 +5,7 @@ namespace SyncSoccerData.ViewModels
     public class VenueVM
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace SyncSoccerData.ViewModels
         public string City { get; set; }
 
         [JsonProperty("capacity")]
-        public int Capacity { get; set; }
+        public int? Capacity { get; set; }
 
         [JsonProperty("surface")]
         public string Surface { get; set; }

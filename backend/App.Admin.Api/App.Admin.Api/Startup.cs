@@ -59,6 +59,7 @@ namespace App.Admin.Api
             services.AddScoped<IEventTimeStatisticRepository, EventTimeStatisticRepository>();
 
             services.AddScoped<ICompetitionIntegrationEventService, CompetitionIntegrationEventService>();
+            services.AddScoped<ITeamsIntegrationEventService, TeamsIntegrationEventService>();
 
             services.AddScoped<IApiValueReferenceRepository, ApiValueReferenceRepository>();
 
@@ -97,6 +98,7 @@ namespace App.Admin.Api
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.Subscribe<CompetitionIntegrationEvent, CompetitionIntegrationEventHandler>();
+            eventBus.Subscribe<TeamsIntegrationEvent, TeamsIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -146,9 +148,9 @@ namespace App.Admin.Api
                     factory.UserName = configuration["EventBusUserName"];
                 }
 
-                if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SOCCER_APP_RABBITMQ_PASSWORD")))
                 {
-                    factory.Password = configuration["EventBusPassword"];
+                    factory.Password = Environment.GetEnvironmentVariable("SOCCER_APP_RABBITMQ_PASSWORD");
                 }
 
                 var retryCount = 5;
@@ -185,6 +187,7 @@ namespace App.Admin.Api
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
             services.AddTransient<CompetitionIntegrationEventHandler>();
+            services.AddTransient<TeamsIntegrationEventHandler>();
 
             return services;
         }

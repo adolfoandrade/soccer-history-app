@@ -29,6 +29,7 @@ namespace App.Infra.Data.Repository
                                    ,[Updated]
                                    ,[ColorTheme]
                                    ,[SecondColorTheme])
+                             OUTPUT INSERTED.Id
                              VALUES
                                    (@Name
                                    ,@Country
@@ -39,7 +40,16 @@ namespace App.Infra.Data.Repository
                                    ,@SecondColorTheme)";
                 try
                 {
-                    return await connection.ExecuteAsync(query, soccerTeam);
+                    return await connection.QueryFirstAsync<int>(query, new
+                    {
+                        Name = soccerTeam.Name,
+                        Country = soccerTeam.Country,
+                        Image = soccerTeam.Image,
+                        Created = soccerTeam.Created,
+                        Updated = soccerTeam.Updated,
+                        SecondColorTheme = soccerTeam.SecondColorTheme,
+                        ColorTheme = soccerTeam.ColorTheme,
+                    });
                 }
                 catch (Exception ex)
                 {

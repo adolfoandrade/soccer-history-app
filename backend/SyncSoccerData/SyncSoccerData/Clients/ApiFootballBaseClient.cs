@@ -29,30 +29,30 @@ namespace SyncSoccerData.Clients
             return countries;
         }
 
-        public Task<ResponseVM<FixtureEventsResponseVM>> GetFixtureEventsAsync(long fixture)
+        public async Task<ResponseVM<FixtureEventsResponseVM>> GetFixtureEventsAsync(long fixture)
         {
-            string FIXTURE_EVENTS_URL = "https://api-football-v1.p.rapidapi.com/v3/fixtures/events?fixture=838627";
-            var fixtureEvents = GetAsync<ResponseVM<FixtureEventsResponseVM>>(FIXTURE_EVENTS_URL).Result;           
-            throw new NotImplementedException();
+            string FIXTURE_EVENTS_URL = $"https://api-football-v1.p.rapidapi.com/v3/fixtures/events?fixture={fixture}";
+            var fixtureEvents = await GetAsync<ResponseVM<FixtureEventsResponseVM>>(FIXTURE_EVENTS_URL);
+            return fixtureEvents;
         }
 
         public async Task<ResponseVM<FixtureLeagueResponseVM>> GetFixturesAsync(int league, int season)
         {
-            string FIXTURES_URL = "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=72&season=2022";
+            string FIXTURES_URL = $"https://api-football-v1.p.rapidapi.com/v3/fixtures?league={league}&season={season}";
             var fixtures = await GetAsync<ResponseVM<FixtureLeagueResponseVM>>(FIXTURES_URL);
             return fixtures;
         }
 
         public async Task<ResponseVM<LeaguesResponseVM>> GetLeaguesAsync(string country)
         {
-            string LEAGUES_URL = "https://api-football-v1.p.rapidapi.com/v3/leagues?country=Brazil";
+            string LEAGUES_URL = $"https://api-football-v1.p.rapidapi.com/v3/leagues?country={country}";
             var leagues = await GetAsync<ResponseVM<LeaguesResponseVM>>(LEAGUES_URL);
             return leagues;
         }
 
         public async Task<ResponseVM<TeamVenueResponseVM>> GetTeamsAsync(int league, int season)
         {
-            string TEAMS_URL = "https://api-football-v1.p.rapidapi.com/v3/teams?league=71&season=2022";
+            string TEAMS_URL = $"https://api-football-v1.p.rapidapi.com/v3/teams?league={league}&season={season}";
             var teams = await GetAsync<ResponseVM<TeamVenueResponseVM>>(TEAMS_URL);
             return teams;
         }

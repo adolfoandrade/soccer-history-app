@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 
 namespace App.EventBus.IntegrationEvents.EventHandling
 {
-    public class CompetitionIntegrationEventHandler : IIntegrationEventHandler<CompetitionIntegrationEvent>
+    public class TeamsIntegrationEventHandler : IIntegrationEventHandler<TeamsIntegrationEvent>
     {
-        private readonly ICompetitionIntegrationEventService _service;
+        private readonly ITeamsIntegrationEventService _service;
 
-        public CompetitionIntegrationEventHandler(ICompetitionIntegrationEventService service)
+        public TeamsIntegrationEventHandler(ITeamsIntegrationEventService service)
         {
             _service = service;
         }
 
-        public async Task Handle(CompetitionIntegrationEvent @event)
+        public async Task Handle(TeamsIntegrationEvent @event)
         {
             try
             {
-                var competitions = JsonConvert.DeserializeObject<ResponseVM<LeaguesResponseVM>>(@event.Competitions);
-                await _service.AddAsync(competitions.Response);
+                var teams = JsonConvert.DeserializeObject<ResponseVM<TeamVenueResponseVM>>(@event.Teams);
+                await _service.AddAsync(teams.Response);
             }
             catch (QueryApiValueReferenceException ex)
             {
@@ -39,7 +39,5 @@ namespace App.EventBus.IntegrationEvents.EventHandling
                 throw;
             }
         }
-
-      
     }
 }
