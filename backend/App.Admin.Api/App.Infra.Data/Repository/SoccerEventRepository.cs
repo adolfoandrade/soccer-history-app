@@ -30,6 +30,7 @@ namespace App.Infra.Data.Repository
                                ,[OutTeamId]
                                ,[Referee]
                                ,[Venue])
+                         OUTPUT INSERTED.Id
                          VALUES
                                (@MatchId
                                ,@Date
@@ -39,7 +40,15 @@ namespace App.Infra.Data.Repository
                                ,@Venue)";
                 try
                 {
-                    return await connection.ExecuteAsync(query, soccerEvent);
+                    return await connection.QueryFirstAsync<int>(query, new
+                    {
+                        MatchId = soccerEvent.MatchId,
+                        Date = soccerEvent.Date,
+                        HomeTeamId = soccerEvent.HomeTeamId,
+                        OutTeamId = soccerEvent.OutTeamId,
+                        Referee = soccerEvent.Referee,
+                        Venue = soccerEvent.Venue,
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -258,6 +267,36 @@ namespace App.Infra.Data.Repository
                 catch (Exception ex)
                 {
                     throw new UpdateSoccerEventException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<SoccerEvent> HasAsync(int competitionId, int match, int home, int away, DateTime date)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = @"SELECT *
+                            FROM Events AS E
+                            LEFT JOIN Matches AS M ON M.Id  = E.MatchId
+                            LEFT JOIN Teams H ON H.Id = E.HomeTeamId
+                            LEFT JOIN Teams O ON O.Id = E.OutTeamId
+                            WHERE M.CompetitionId = @SeasonId";
+
+                try
+                {
+                    var @events = await connection.QueryAsync<SoccerEvent, Match, SoccerTeam, SoccerTeam, SoccerEvent>(query, (soccerEvent, match, homeTeam, outTeam) =>
+                    {
+                        soccerEvent.Match = match;
+                        soccerEvent.Home = homeTeam;
+                        soccerEvent.Out = outTeam;
+                        return soccerEvent;
+                    }, new { SeasonId = competitionId }, splitOn: "Id");
+
+                    return @events.FirstOrDefault(x => x.HomeTeamId == home && x.OutTeamId == away && x.MatchId == match && x.Date.Date == date.Date);
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryBySeasonSoccerEventException(ex.Message, ex);
                 }
             }
         }

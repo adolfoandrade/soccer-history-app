@@ -1,0 +1,14 @@
+﻿using App.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace App.EventBus.IntegrationEvents.Services
+{
+    public interface IFixtureEventsIntegrationEventService
+    {
+        Task<bool> AddOrUpdateAsync(List<FixtureEventsResponseVM> vm, long id);
+    }
+}

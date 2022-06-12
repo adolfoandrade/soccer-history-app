@@ -377,24 +377,24 @@ namespace App.Service
                 return vm;
 
             vm.Id = entity.Id;
-            vm.BallPossession = entity.BallPossession;
-            vm.GoalAttempts = entity.GoalAttempts;
-            vm.ShotsOnGoal = entity.ShotsOnGoal;
-            vm.ShotsOffGoal = entity.ShotsOffGoal;
-            vm.BlockedShots = entity.BlockedShots;
-            vm.CornerKicks = entity.CornerKicks;
-            vm.FreeKicks = entity.FreeKicks;
-            vm.Offsides = entity.Offsides;
-            vm.Throwin = entity.Throwin;
-            vm.GoalkeeperSaves = entity.GoalkeeperSaves;
-            vm.Fouls = entity.Fouls;
-            vm.YellowCards = entity.YellowCards;
-            vm.RedCards = entity.RedCards;
-            vm.TotalPasses = entity.TotalPasses;
-            vm.CompletedPasses = entity.CompletedPasses;
-            vm.Trackles = entity.Trackles;
-            vm.Attacks = entity.Attacks;
-            vm.DangerousAttacks = entity.DangerousAttacks;
+            //vm.BallPossession = entity.BallPossession;
+            //vm.GoalAttempts = entity.GoalAttempts;
+            //vm.ShotsOnGoal = entity.ShotsOnGoal;
+            //vm.ShotsOffGoal = entity.ShotsOffGoal;
+            //vm.BlockedShots = entity.BlockedShots;
+            //vm.CornerKicks = entity.CornerKicks;
+            //vm.FreeKicks = entity.FreeKicks;
+            //vm.Offsides = entity.Offsides;
+            //vm.Throwin = entity.Throwin;
+            //vm.GoalkeeperSaves = entity.GoalkeeperSaves;
+            //vm.Fouls = entity.Fouls;
+            //vm.YellowCards = entity.YellowCards;
+            //vm.RedCards = entity.RedCards;
+            //vm.TotalPasses = entity.TotalPasses;
+            //vm.CompletedPasses = entity.CompletedPasses;
+            //vm.Trackles = entity.Trackles;
+            //vm.Attacks = entity.Attacks;
+            //vm.DangerousAttacks = entity.DangerousAttacks;
 
             return vm;
         }
@@ -575,7 +575,7 @@ namespace App.Service
                 return entity;
 
             Enum.TryParse(vm.Half, out SoccerTimers half);
-            entity.EventTimeStatistic = new EventTimeStatistic() { SoccerTeamId = vm.SoccerTeamId, Half = half, EventId = vm.EventId };
+            //entity.EventTimeStatistic = new EventTimeStatistic() { SoccerTeamId = vm.SoccerTeamId, Half = half, EventId = vm.EventId };
             entity.BallPossession = vm.BallPossession;
             entity.GoalAttempts = vm.GoalAttempts;
             entity.ShotsOnGoal = vm.ShotsOnGoal;

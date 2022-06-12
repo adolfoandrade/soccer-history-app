@@ -43,6 +43,13 @@ namespace SyncSoccerData.Clients
             return fixtures;
         }
 
+        public async Task<ResponseVM<FixtureStatisticsResponseVM>> GetFixtureStatisticsAsync(long fixture)
+        {
+            string STATISTCS_URL = $"https://api-football-v1.p.rapidapi.com/v3/fixtures/statistics?fixture={fixture}";
+            var statistics = await GetAsync<ResponseVM<FixtureStatisticsResponseVM>>(STATISTCS_URL);
+            return statistics;
+        }
+
         public async Task<ResponseVM<LeaguesResponseVM>> GetLeaguesAsync(string country)
         {
             string LEAGUES_URL = $"https://api-football-v1.p.rapidapi.com/v3/leagues?country={country}";

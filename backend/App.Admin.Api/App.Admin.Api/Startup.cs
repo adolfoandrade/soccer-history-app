@@ -57,9 +57,13 @@ namespace App.Admin.Api
             services.AddScoped<ICommonStatisticService, CommonStatisticService>();
 
             services.AddScoped<IEventTimeStatisticRepository, EventTimeStatisticRepository>();
+            services.AddScoped<IMatchEventsRepository, MatchEventsRepository>();
 
             services.AddScoped<ICompetitionIntegrationEventService, CompetitionIntegrationEventService>();
             services.AddScoped<ITeamsIntegrationEventService, TeamsIntegrationEventService>();
+            services.AddScoped<IFixtureIntegrationEventService, FixtureIntegrationEventService>();
+            services.AddScoped<IFixtureStatisticIntegrationEventService, FixtureStatisticIntegrationEventService>();
+            services.AddScoped<IFixtureEventsIntegrationEventService, FixtureEventsIntegrationEventService>();
 
             services.AddScoped<IApiValueReferenceRepository, ApiValueReferenceRepository>();
 
@@ -99,6 +103,9 @@ namespace App.Admin.Api
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.Subscribe<CompetitionIntegrationEvent, CompetitionIntegrationEventHandler>();
             eventBus.Subscribe<TeamsIntegrationEvent, TeamsIntegrationEventHandler>();
+            eventBus.Subscribe<FixtureStatisticsIntegrationEvent, FixtureStatisticsIntegrationEventHandler>();
+            eventBus.Subscribe<FixtureIntegrationEvent, FixtureIntegrationEventHandler>();
+            eventBus.Subscribe<FixtureEventsIntegrationEvent, FixtureEventsIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -188,6 +195,9 @@ namespace App.Admin.Api
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
             services.AddTransient<CompetitionIntegrationEventHandler>();
             services.AddTransient<TeamsIntegrationEventHandler>();
+            services.AddTransient<FixtureIntegrationEventHandler>();
+            services.AddTransient<FixtureEventsIntegrationEventHandler>();
+            services.AddTransient<FixtureStatisticsIntegrationEventHandler>();
 
             return services;
         }

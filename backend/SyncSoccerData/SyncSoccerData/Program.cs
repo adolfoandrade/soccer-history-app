@@ -55,30 +55,36 @@ namespace SyncSoccerData
             /* Query api and send data */
             var serviceBus = container.Resolve<IEventBus>();
             var _client = container.Resolve<IApiFootballBaseClient>();
-            //var countries = new List<string>() { "Brazil", "Colombia", "Chile", "Venezuela", "Argentina", "Uruguay", "Bolivia", "Ecuador", "Peru" };
-            var countries = new List<string>() { "Peru" };
+            //var countries = new List<string>() { "Brazil", "Colombia", "Chile", "Venezuela", "Argentina", "Uruguay", "Bolivia", "Ecuador", "Peru", "Paraguay" };
+            var countries = new List<string>() { "Chile", "Venezuela" };
 
             foreach (var country in countries)
             {
                 
                 var leagues = _client.GetLeaguesAsync(country).Result;
-                //serviceBus.Publish(new CompetitionIntegrationEvent() { Competitions = JsonConvert.SerializeObject(leagues) });
-
-                foreach (var league in leagues.Response)
+                serviceBus.Publish(new CompetitionIntegrationEvent() { Competitions = JsonConvert.SerializeObject(leagues) });
+                var ableLeagues = leagues.Response.Where(x => x.Seasons.Any(y => y.Year == 2022 && y.End.Date >= DateTime.Now.Date)).ToList();
+                foreach (var league in ableLeagues)
                 {
-                    //var teams = _client.GetTeamsAsync(league.LeagueVM.Id, 2022).Result;
-                    //serviceBus.Publish(new TeamsIntegrationEvent() { Teams = JsonConvert.SerializeObject(teams) });
+                    var teams = _client.GetTeamsAsync(league.LeagueVM.Id, 2022).Result;
+                    serviceBus.Publish(new TeamsIntegrationEvent() { Teams = JsonConvert.SerializeObject(teams) });
                     //Task.Delay(TimeSpan.FromSeconds(15));
                     var fixtures = _client.GetFixturesAsync(league.LeagueVM.Id, 2022).Result;
+                    serviceBus.Publish(new FixtureIntegrationEvent() { Fixtures = JsonConvert.SerializeObject(fixtures) });
+                    Console.WriteLine($"Sending competition {league.LeagueVM.Name}");
                     foreach (var fixture in fixtures.Response)
                     {
                         var events = _client.GetFixtureEventsAsync(fixture.Fixture.Id).Result;
+                        serviceBus.Publish(new FixtureEventsIntegrationEvent() { TheEvents = JsonConvert.SerializeObject(events), Fixture = fixture.Fixture.Id });
+                        var statistics = _client.GetFixtureStatisticsAsync(fixture.Fixture.Id).Result;
+                        serviceBus.Publish(new FixtureStatisticsIntegrationEvent() { Statistics = JsonConvert.SerializeObject(statistics), Fixture = fixture.Fixture.Id });
                     }
+                    Console.WriteLine("Waiting 30 seconds");
+                    Thread.Sleep(TimeSpan.FromSeconds(30));
                 }
-
-                Task.Delay(TimeSpan.FromSeconds(60));
             }
 
+            Console.WriteLine("Process finished");
             Console.ReadLine();
         }
 

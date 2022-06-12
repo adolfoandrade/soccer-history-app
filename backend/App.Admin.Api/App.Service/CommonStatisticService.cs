@@ -19,30 +19,31 @@ namespace App.Service
             _eventTimeStatisticRepository = eventTimeStatisticRepository;
         }
 
-        public async Task<int> AddAsync(AddCommonStatisticVM vm)
+        public Task<int> AddAsync(AddCommonStatisticVM vm)
         {
-            try
-            {
-                var entity = vm.ToEntity();
-                var eventTime = await _eventTimeStatisticRepository.GetAsync(vm.EventId, (int)entity.EventTimeStatistic.Half, vm.SoccerTeamId);
-                if (eventTime is null)
-                {
-                    entity.EventTimeStatisticId = await _eventTimeStatisticRepository.AddAsync(entity.EventTimeStatistic);
-                }
-                else
-                {
-                    entity.EventTimeStatisticId = eventTime.Id;
-                }
-                return await _repository.AddAsync(entity);
-            }
-            catch (AddStatisticException ex)
-            {
-                throw new AddStatisticException(ex.Message, ex);
-            }
-            catch (Exception ex)
-            {
-                throw new AddStatisticException(ex.Message, ex);
-            }
+            //try
+            //{
+            //    var entity = vm.ToEntity();
+            //    var eventTime = await _eventTimeStatisticRepository.GetAsync(vm.EventId, (int)entity.EventTimeStatistic.Half, vm.SoccerTeamId);
+            //    if (eventTime is null)
+            //    {
+            //        entity.EventTimeStatisticId = await _eventTimeStatisticRepository.AddAsync(entity.EventTimeStatistic);
+            //    }
+            //    else
+            //    {
+            //        entity.EventTimeStatisticId = eventTime.Id;
+            //    }
+            //    return await _repository.AddAsync(entity);
+            //}
+            //catch (AddStatisticException ex)
+            //{
+            //    throw new AddStatisticException(ex.Message, ex);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new AddStatisticException(ex.Message, ex);
+            //}
+            return Task.FromResult(1);
         }
 
     }

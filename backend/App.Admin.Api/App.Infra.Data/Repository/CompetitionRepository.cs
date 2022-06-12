@@ -69,7 +69,7 @@ namespace App.Infra.Data.Repository
             }
         }
 
-        public async Task<IEnumerable<Competition>> GetBySeasonAsync(string season)
+        public async Task<Competition> GetBySeasonAsync(int id, string season)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -81,10 +81,10 @@ namespace App.Infra.Data.Repository
                                   ,[Created]
                                   ,[Updated]
                               FROM [dbo].[Competitions]
-                              WHERE [Year] LIKE '%{season}%'";
+                              WHERE [Id] = '%{id}%'";
                 try
                 {
-                    return await connection.QueryAsync<Competition>(query);
+                    return await connection.QueryFirstOrDefaultAsync<Competition>(query);
                 }
                 catch (Exception ex)
                 {

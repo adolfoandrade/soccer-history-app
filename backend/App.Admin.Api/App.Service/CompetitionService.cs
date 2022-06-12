@@ -50,20 +50,21 @@ namespace App.Service
 
         public async Task<IEnumerable<CompetitionVM>> GetBySeasonAsync(string season)
         {
-            try
-            {
-                var competitions = await _repository.GetBySeasonAsync(season);
-                var vm = competitions.ToVM();
-                return vm;
-            }
-            catch (QueryCompetitionBySeasonException ex)
-            {
-                throw new QueryCompetitionBySeasonException(ex.Message, ex);
-            }
-            catch (Exception ex)
-            {
-                throw new QueryCompetitionBySeasonException(ex.Message, ex);
-            }
+            //try
+            //{
+            //    var competitions = await _repository.GetBySeasonAsync(season);
+            //    var vm = competitions.ToVM();
+            //    return vm;
+            //}
+            //catch (QueryCompetitionBySeasonException ex)
+            //{
+            //    throw new QueryCompetitionBySeasonException(ex.Message, ex);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new QueryCompetitionBySeasonException(ex.Message, ex);
+            throw new NotImplementedException();
+            //}
         }
 
         public async Task<bool> UpdateAsync(CompetitionVM vm)

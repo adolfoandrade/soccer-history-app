@@ -1,4 +1,5 @@
 ﻿using App.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,6 +7,7 @@ namespace App.Domain.Interfaces
 {
     public interface ISoccerEventRepository
     {
+        Task<SoccerEvent> HasAsync(int competitionId, int match, int home, int away, DateTime date);
         Task<IEnumerable<SoccerEvent>> GetBySeasonAsync(int seasonId);
         Task<IEnumerable<SoccerEvent>> GetByMatchAsync(string match);
         Task<SoccerEvent> GetAsync(int id);
