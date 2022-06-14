@@ -29,7 +29,8 @@ namespace App.Infra.Data.Repository
                                ,[HomeTeamId]
                                ,[OutTeamId]
                                ,[Referee]
-                               ,[Venue])
+                               ,[Venue]
+                               ,[Status])
                          OUTPUT INSERTED.Id
                          VALUES
                                (@MatchId
@@ -37,7 +38,8 @@ namespace App.Infra.Data.Repository
                                ,@HomeTeamId
                                ,@OutTeamId
                                ,@Referee
-                               ,@Venue)";
+                               ,@Venue
+                               ,@Status)";
                 try
                 {
                     return await connection.QueryFirstAsync<int>(query, new
@@ -48,6 +50,7 @@ namespace App.Infra.Data.Repository
                         OutTeamId = soccerEvent.OutTeamId,
                         Referee = soccerEvent.Referee,
                         Venue = soccerEvent.Venue,
+                        Status = soccerEvent.Status
                     });
                 }
                 catch (Exception ex)
@@ -259,6 +262,7 @@ namespace App.Infra.Data.Repository
                                   ,[OutTeamId] = @OutTeamId
                                   ,[Referee] = @Referee
                                   ,[Venue] = @Venue
+                                  ,[Status] = @Status
                              WHERE [Id] = @Id";
                 try
                 {

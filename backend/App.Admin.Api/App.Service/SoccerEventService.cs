@@ -122,7 +122,7 @@ namespace App.Service
             try
             {
                 var vm = new SoccerEventSeasonVM();
-                var competitions = await _competitionRepository.GetBySeasonAsync(season);
+                var competitions = new List<Competition>(); // await _competitionRepository.GetBySeasonAsync(season);
                 var theCompetition = competitions.FirstOrDefault(x => x.Id == competitionId);
                 var seasonEvents = await _repository.GetBySeasonAsync(theCompetition.Id);
                 var matches = seasonEvents.Select(x => x.Match)

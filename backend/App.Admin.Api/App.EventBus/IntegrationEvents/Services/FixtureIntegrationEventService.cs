@@ -37,7 +37,8 @@ namespace App.EventBus.IntegrationEvents.Services
                 string stage = string.Empty;
                 try
                 {
-                    round = item.League.Round[item.League.Round.Length - 1];
+                    var roundNumber = item.League.Round.Substring(item.League.Round.Length - 2, 2);
+                    round = int.Parse(roundNumber);
                 }
                 catch (Exception)
                 {
@@ -69,7 +70,8 @@ namespace App.EventBus.IntegrationEvents.Services
                     OutTeamId = away.AppId,
                     Referee = item.Fixture.Referee,
                     Venue = item.Fixture.Venue?.Name,
-                    Date = item.Fixture.Date
+                    Date = item.Fixture.Date,
+                    Status = item.Fixture.Status.Long
                 };
                 var has = await _eventRepository.HasAsync(match.CompetitionId, match.Id, theEvent.HomeTeamId, theEvent.OutTeamId, theEvent.Date);
                 if(has == null)
@@ -97,6 +99,14 @@ namespace App.EventBus.IntegrationEvents.Services
                             AppId = has.Id
                         };
                         await _referenceRepository.AddAsync(reference);
+                    }
+                    if(has.Status == null || (has.Status.ToUpper() != item.Fixture.Status.Long.ToUpper()))
+                    {
+                        has.Status = item.Fixture.Status.Long;
+                        has.Referee = item.Fixture.Referee;
+                        has.Venue = item.Fixture.Venue?.Name;
+                        has.Date = item.Fixture.Date;
+                        await _eventRepository.UpdateAsync(has);
                     }
                 }
             }
