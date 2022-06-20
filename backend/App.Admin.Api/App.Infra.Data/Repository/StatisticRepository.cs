@@ -1,6 +1,7 @@
 ﻿using App.Domain.Exceptions.Statistic;
 using App.Domain.Interfaces;
 using App.Domain.Models;
+using App.Models;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,35 @@ namespace App.Infra.Data.Repository
                                    ,@Trackles
                                    ,@Attacks
                                    ,@DangerousAttacks)";
+                try
+                {
+                    return await connection.ExecuteAsync(query, entity);
+                }
+                catch (Exception ex)
+                {
+                    throw new AddStatisticException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<int> SaveDataOddAsync(IEnumerable<StatisticOddByMatch> entity)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = @"INSERT INTO [dbo].[DataSentToBot]
+                                   ([CompetitionId]
+                                   ,[MatchNumber]
+                                   ,[QuantityEvents]
+                                   ,[Odd]
+                                   ,[OverUnder]
+                                   ,[Quantity])
+                             VALUES
+                                   (@CompetitionId
+                                   ,@MatchNumber
+                                   ,@QuantityEvents
+                                   ,@Odd
+                                   ,@OverUnder
+                                   ,@Quantity)";
                 try
                 {
                     return await connection.ExecuteAsync(query, entity);
@@ -186,7 +216,95 @@ namespace App.Infra.Data.Repository
                                 WHERE M.CompetitionId = @Id";
                 try
                 {
-                    return await connection.QueryAsync<Statistic>(query, new { Id = competitionId });
+                    return await connection.QueryAsync<Statistic, SoccerEvent, Match, Statistic>(query, (statistic, theEvent, match) => {
+                        theEvent.Match = match;
+                        statistic.TheEvent = theEvent;
+                        return statistic;
+                    }, new { Id = competitionId });
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryEventTimeStatisticException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<MatchEvent>> GetGoalsByCompetitionsAsync(params int[] competitionId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT ME.* FROM MatchEvents AS ME
+                                INNER JOIN Events AS E ON E.Id = ME.EventId
+                                INNER JOIN Matches AS M ON M.Id = E.MatchId
+                                INNER JOIN Competitions AS C ON C.Id = M.CompetitionId
+                                WHERE UPPER(ME.Type) = UPPER('GOAL') AND E.Status = UPPER('Match Finished') AND M.Id IN(@Id)";
+                try
+                {
+                    return await connection.QueryAsync<MatchEvent, SoccerEvent, Match, MatchEvent>(query, (matchEvent, theEvent, match) => {
+                        theEvent.Match = match;
+                        matchEvent.TheEvent = theEvent;
+                        return matchEvent;
+                    }, new { Id = competitionId });
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryEventTimeStatisticException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<MatchEvent>> GetGoalsByMatchAsync(params int[] competitionId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT ME.* FROM MatchEvents AS ME
+                                INNER JOIN Events AS E ON E.Id = ME.EventId
+                                INNER JOIN Matches AS M ON M.Id = E.MatchId
+                                INNER JOIN Competitions AS C ON C.Id = M.CompetitionId
+                                WHERE UPPER(ME.Type) = UPPER('GOAL') AND E.Status = UPPER('Match Finished') AND M.Id IN(@Id)";
+                try
+                {
+                    return await connection.QueryAsync<MatchEvent>(query, new { Id = competitionId });
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryEventTimeStatisticException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<MatchEvent>> GetCardsByMatchAsync(params int[] competitionId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT ME.* FROM MatchEvents AS ME
+                                INNER JOIN Events AS E ON E.Id = ME.EventId
+                                INNER JOIN Matches AS M ON M.Id = E.MatchId
+                                INNER JOIN Competitions AS C ON C.Id = M.CompetitionId
+                                WHERE UPPER(ME.Type) = UPPER('CARD') AND E.Status = UPPER('Match Finished') AND M.Id IN(@Id)";
+                try
+                {
+                    return await connection.QueryAsync<MatchEvent>(query, new { Id = competitionId });
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryEventTimeStatisticException(ex.Message, ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Match>> GetMatchesByCompetitionAsync(int competitionId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = $@"SELECT DISTINCT M.* FROM MatchEvents AS ME
+                                INNER JOIN Events AS E ON E.Id = ME.EventId
+                                INNER JOIN Matches AS M ON M.Id = E.MatchId
+                                INNER JOIN Competitions AS C ON C.Id = M.CompetitionId
+                                WHERE C.Id = @Id AND UPPER(E.Status) = UPPER('Match Finished')";
+                try
+                {
+                    return await connection.QueryAsync<Match>(query, new { Id = competitionId });
                 }
                 catch (Exception ex)
                 {

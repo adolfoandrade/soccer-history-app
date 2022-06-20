@@ -77,14 +77,13 @@ namespace App.Infra.Data.Repository
                                   ,[Name]
                                   ,[Country]
                                   ,[Image]
-                                  ,[Year]
                                   ,[Created]
                                   ,[Updated]
                               FROM [dbo].[Competitions]
-                              WHERE [Id] = '%{id}%'";
+                              WHERE [Id] = @Id";
                 try
                 {
-                    return await connection.QueryFirstOrDefaultAsync<Competition>(query);
+                    return await connection.QueryFirstOrDefaultAsync<Competition>(query, new { Id = id });
                 }
                 catch (Exception ex)
                 {

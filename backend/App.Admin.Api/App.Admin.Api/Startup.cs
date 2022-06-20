@@ -64,6 +64,7 @@ namespace App.Admin.Api
             services.AddScoped<IFixtureIntegrationEventService, FixtureIntegrationEventService>();
             services.AddScoped<IFixtureStatisticIntegrationEventService, FixtureStatisticIntegrationEventService>();
             services.AddScoped<IFixtureEventsIntegrationEventService, FixtureEventsIntegrationEventService>();
+            services.AddScoped<IStatistcsToBotIntegrationEventService, StatistcsToBotIntegrationEventService>();
 
             services.AddScoped<IApiValueReferenceRepository, ApiValueReferenceRepository>();
 
@@ -106,6 +107,7 @@ namespace App.Admin.Api
             eventBus.Subscribe<FixtureStatisticsIntegrationEvent, FixtureStatisticsIntegrationEventHandler>();
             eventBus.Subscribe<FixtureIntegrationEvent, FixtureIntegrationEventHandler>();
             eventBus.Subscribe<FixtureEventsIntegrationEvent, FixtureEventsIntegrationEventHandler>();
+            eventBus.Subscribe<UpdateCompetitionStatisticIntegrationEvent, UpdateCompetitionStatisticIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -198,6 +200,7 @@ namespace App.Admin.Api
             services.AddTransient<FixtureIntegrationEventHandler>();
             services.AddTransient<FixtureEventsIntegrationEventHandler>();
             services.AddTransient<FixtureStatisticsIntegrationEventHandler>();
+            services.AddTransient<UpdateCompetitionStatisticIntegrationEventHandler>();
 
             return services;
         }
